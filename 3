@@ -1,0 +1,3143 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>עולם החשבון של כיתה ג׳</title>
+    <style>
+        /* איפוס בסיסי והגדרות מובייל */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Rubik', 'Alef', 'Segoe UI', Tahoma, Arial, sans-serif;
+            background: linear-gradient(135deg, #e0f2fe 0%, #fef9c3 55%, #fce7f3 100%);
+            min-height: 100vh;
+            color: #1e293b;
+            padding: 18px;
+        }
+
+        .container {
+            max-width: 1120px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* כותרת ראשית */
+        .hero {
+            background: #ffffff;
+            border: 4px solid #38bdf8;
+            border-radius: 28px;
+            padding: 20px 26px;
+            box-shadow: 0 10px 25px rgba(2, 132, 199, 0.12);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .hero-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .hero-badge {
+            width: 64px;
+            height: 64px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #f59e0b, #ea580c);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 34px;
+            box-shadow: 0 6px 14px rgba(234, 88, 12, 0.3);
+            flex-shrink: 0;
+        }
+
+        .hero-title {
+            font-size: 1.85rem;
+            font-weight: 800;
+            color: #0c4a6e;
+        }
+
+        .hero-sub {
+            font-size: 1.05rem;
+            color: #0284c7;
+            font-weight: 700;
+            margin-top: 2px;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* כפתורים מעוצבים */
+        .btn {
+            border: none;
+            border-radius: 16px;
+            padding: 11px 18px;
+            font-size: 1rem;
+            font-weight: 800;
+            font-family: inherit;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: transform 0.12s, filter 0.15s;
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15);
+        }
+
+        .btn:hover { filter: brightness(1.04); }
+        .btn:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0, 0, 0, 0.15); }
+
+        .btn-teacher { background: #f3e8ff; border: 2px solid #c084fc; color: #581c87; }
+        .btn-purple { background: linear-gradient(135deg, #9333ea, #7e22ce); color: #ffffff; }
+        .btn-primary { background: linear-gradient(135deg, #10b981, #059669); color: #ffffff; font-size: 1.1rem; width: 100%; }
+        .btn-quiz { background: linear-gradient(135deg, #f59e0b, #ea580c); color: #ffffff; font-size: 1.15rem; width: 100%; }
+        .btn-blue { background: linear-gradient(135deg, #3b82f6, #2563eb); color: #ffffff; }
+        .btn-gray { background: #e2e8f0; color: #1e293b; }
+        .btn-danger { background: #fee2e2; border: 2px solid #f87171; color: #991b1b; padding: 7px 12px; font-size: 0.9rem; }
+
+        /* סרגל קטגוריות */
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .filter-chip {
+            background: #ffffff;
+            border: 3px solid #cbd5e1;
+            border-radius: 999px;
+            padding: 10px 20px;
+            font-size: 1.05rem;
+            font-weight: 800;
+            font-family: inherit;
+            color: #334155;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .filter-chip:hover {
+            border-color: #38bdf8;
+            transform: translateY(-2px);
+        }
+
+        .filter-chip.active {
+            background: #0284c7;
+            border-color: #0369a1;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.28);
+        }
+
+        .filter-chip.quiz-chip {
+            border-color: #f59e0b;
+            background: #fffbeb;
+            color: #92400e;
+        }
+
+        .filter-chip.quiz-chip.active {
+            background: linear-gradient(135deg, #f59e0b, #ea580c);
+            border-color: #b45309;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(234, 88, 12, 0.32);
+        }
+
+        /* רשת כרטיסיות המשחקים */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(295px, 1fr));
+            gap: 20px;
+        }
+
+        .game-card {
+            background: #ffffff;
+            border: 4px solid #bae6fd;
+            border-radius: 26px;
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 14px;
+            box-shadow: 0 10px 22px rgba(15, 23, 42, 0.06);
+            transition: transform 0.18s;
+            position: relative;
+        }
+
+        .game-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .game-card.featured-quiz {
+            border-color: #f59e0b;
+            background: linear-gradient(180deg, #fffbeb 0%, #ffffff 45%);
+            box-shadow: 0 12px 26px rgba(245, 158, 11, 0.18);
+        }
+
+        .card-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-icon {
+            font-size: 2.8rem;
+            background: #f0f9ff;
+            width: 68px;
+            height: 68px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #7dd3fc;
+        }
+
+        .featured-quiz .card-icon {
+            background: #fef3c7;
+            border-color: #fbbf24;
+        }
+
+        .cat-badge {
+            background: #eef2ff;
+            color: #3730a3;
+            border: 2px solid #c7d2fe;
+            padding: 5px 12px;
+            border-radius: 999px;
+            font-size: 0.88rem;
+            font-weight: 800;
+        }
+
+        .featured-quiz .cat-badge {
+            background: #fef3c7;
+            color: #92400e;
+            border-color: #f59e0b;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        .card-desc {
+            font-size: 1rem;
+            color: #475569;
+            line-height: 1.5;
+        }
+
+        /* חלון משחק במסך מלא */
+        .player-overlay {
+            position: fixed;
+            inset: 0;
+            background: #0f172a;
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .player-bar {
+            background: #ffffff;
+            border-bottom: 3px solid #38bdf8;
+            padding: 10px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .player-frame {
+            flex: 1;
+            width: 100%;
+            border: none;
+            background: #ffffff;
+        }
+
+        /* חלונות מורה */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.65);
+            z-index: 2500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        .modal-box {
+            background: #ffffff;
+            border: 4px solid #c084fc;
+            border-radius: 26px;
+            padding: 24px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-weight: 800;
+            color: #334155;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 11px 14px;
+            border: 2px solid #cbd5e1;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .form-textarea {
+            min-height: 110px;
+            direction: ltr;
+            font-family: monospace;
+            font-size: 0.85rem;
+        }
+
+        .pin-input {
+            width: 180px;
+            margin: 0 auto;
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: 4px;
+            padding: 12px;
+            border: 3px solid #c084fc;
+            border-radius: 16px;
+            outline: none;
+        }
+
+        .pin-input:focus {
+            border-color: #7e22ce;
+            box-shadow: 0 0 0 4px rgba(147, 51, 234, 0.2);
+        }
+
+        .err-box {
+            background: #fee2e2;
+            border: 2px solid #f87171;
+            color: #991b1b;
+            padding: 8px 14px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 0.95rem;
+        }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- כותרת ראשית -->
+    <header class="hero">
+        <div class="hero-right">
+            <div class="hero-badge">🦉</div>
+            <div>
+                <h1 class="hero-title">עולם החשבון של כיתה ג׳</h1>
+                <div class="hero-sub">בוחרים משחק, מתרגלים בכיף ומצליחים!</div>
+            </div>
+        </div>
+        <div class="hero-actions">
+            <button type="button" id="btn-teacher-mode" class="btn btn-teacher" onclick="handleTeacherButtonClick()">👩‍🏫 מצב מורה</button>
+        </div>
+    </header>
+
+    <!-- פאנל ניהול למורה (מוגן בקוד גישה) -->
+    <section id="teacher-panel" class="hidden" style="background:#faf5ff; border:3px dashed #a855f7; border-radius:24px; padding:18px; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px;">
+        <div style="font-weight:800; color:#581c87; font-size:1.1rem;">
+            👩‍🏫 מצב עריכה פעיל: ניתן להוסיף משחקים חדשים (קישור או קוד HTML) או לייצא קובץ מעודכן לתלמידים.
+        </div>
+        <div style="display:flex; flex-wrap:wrap; gap:10px;">
+            <button type="button" class="btn btn-blue" onclick="openAddGameModal()">➕ הוספת משחק חדש</button>
+            <button type="button" class="btn btn-primary" style="width:auto;" onclick="exportPortalHtml()">💾 ייצוא / שיתוף האתר</button>
+        </div>
+    </section>
+
+    <!-- סינון לפי קטגוריות -->
+    <nav class="filters" id="category-filters"></nav>
+
+    <!-- רשת המשחקים -->
+    <main class="games-grid" id="games-grid"></main>
+</div>
+
+<!-- מסך משחק מלא (Iframe) -->
+<div id="player-overlay" class="player-overlay hidden">
+    <div class="player-bar">
+        <div style="display:flex; align-items:center; gap:10px;">
+            <span id="player-icon" style="font-size:1.6rem;">🎮</span>
+            <strong id="player-title" style="font-size:1.2rem; color:#0c4a6e;">שם המשחק</strong>
+        </div>
+        <button type="button" class="btn btn-gray" onclick="closePlayer()">✖️ חזרה לאתר הכיתתי</button>
+    </div>
+    <iframe id="player-frame" class="player-frame" title="משחק חשבון"></iframe>
+</div>
+
+<!-- מודאל הזנת קוד גישה למורה (3275) -->
+<div id="modal-teacher-pin" class="modal-overlay hidden">
+    <div class="modal-box" style="max-width:410px; text-align:center;">
+        <div style="font-size:2.8rem;">🔐👩‍🏫</div>
+        <h3 style="font-size:1.45rem; font-weight:800; color:#581c87;">כניסת מורה</h3>
+        <p style="color:#475569; font-weight:700;">הזינו את קוד הגישה למורה כדי לנהל משחקים באתר:</p>
+        <input type="password" inputmode="numeric" id="portal-teacher-pin" class="pin-input" placeholder="••••" maxlength="8" onkeydown="if(event.key==='Enter') verifyPortalTeacherPin()">
+        <div id="portal-pin-error" class="err-box hidden">קוד שגוי! נסו שוב.</div>
+        <div style="display:flex; justify-content:center; gap:10px; margin-top:6px;">
+            <button type="button" class="btn btn-purple" onclick="verifyPortalTeacherPin()">כניסה</button>
+            <button type="button" class="btn btn-gray" onclick="closeTeacherPinModal()">ביטול</button>
+        </div>
+    </div>
+</div>
+
+<!-- מודאל הוספת משחק חדש (למורה) -->
+<div id="modal-add-game" class="modal-overlay hidden">
+    <div class="modal-box">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h3 style="font-size:1.35rem; font-weight:800; color:#581c87;">➕ הוספת משחק חדש לכיתה ג׳</h3>
+            <button type="button" class="btn btn-gray" onclick="closeAddGameModal()">✖️</button>
+        </div>
+
+        <div class="form-group">
+            <label>שם המשחק:</label>
+            <input type="text" id="new-title" class="form-input" placeholder="למשל: אלופי הכפל או מסע בישר המספרים">
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+            <div class="form-group">
+                <label>קטגוריה:</label>
+                <select id="new-category" class="form-select">
+                    <option value="תרגול לבוחן">📝 תרגול לבוחן</option>
+                    <option value="כפל וחילוק">✖️ כפל וחילוק</option>
+                    <option value="מבנה עשרוני">🔢 מבנה עשרוני</option>
+                    <option value="גיאומטריה וזוויות">📐 גיאומטריה וזוויות</option>
+                    <option value="שעון ומדידות">⏰ שעון ומדידות</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>אייקון (אימוג׳י):</label>
+                <input type="text" id="new-icon" class="form-input" value="🎯" maxlength="4">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>תיאור קצר לתלמידים:</label>
+            <input type="text" id="new-desc" class="form-input" placeholder="הסבר קצר על מה מתרגלים במשחק">
+        </div>
+
+        <div class="form-group">
+            <label>סוג תוכן:</label>
+            <select id="new-type" class="form-select" onchange="toggleNewSourceType()">
+                <option value="html">הדבקת קוד HTML של משחק (שנבנה כאן)</option>
+                <option value="url">קישור לאתר חיצוני (URL)</option>
+            </select>
+        </div>
+
+        <div id="group-html" class="form-group">
+            <label>הדביקי כאן את קוד ה-HTML המלא של המשחק:</label>
+            <textarea id="new-html" class="form-textarea" placeholder="<!DOCTYPE html>..."></textarea>
+        </div>
+
+        <div id="group-url" class="form-group hidden">
+            <label>קישור למשחק (https://...):</label>
+            <input type="url" id="new-url" class="form-input" placeholder="https://...">
+        </div>
+
+        <div id="add-game-error" class="err-box hidden">נא למלא שם משחק ואת הקוד או הקישור.</div>
+
+        <button type="button" class="btn btn-primary" onclick="saveNewGame()">✅ שמור והוסף לאתר הכיתתי</button>
+    </div>
+</div>
+
+<!-- מודאל אישור מחיקת משחק -->
+<div id="modal-confirm-delete" class="modal-overlay hidden">
+    <div class="modal-box" style="max-width:400px; text-align:center;">
+        <div style="font-size:2.5rem;">🗑️</div>
+        <h3 style="font-size:1.3rem; font-weight:800; color:#991b1b;">הסרת משחק</h3>
+        <p style="color:#475569; font-weight:700;">האם להסיר משחק זה מרשימת המשחקים באתר?</p>
+        <div style="display:flex; justify-content:center; gap:10px; margin-top:6px;">
+            <button type="button" class="btn btn-danger" style="padding:10px 20px; font-size:1rem;" onclick="confirmDeleteGame()">כן, הסר משחק</button>
+            <button type="button" class="btn btn-gray" onclick="closeConfirmDeleteModal()">ביטול</button>
+        </div>
+    </div>
+</div>
+
+<!-- תבנית קוד למשחק "אלופי החשבון של כיתה ג'!" (תרגול לבוחן) -->
+<script type="text/plain" id="tpl-quiz-adventure-g3"><!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>משחק חשבון אינטראקטיבי - כיתה ג'</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"><\/script>
+  <style>
+    body {
+      font-family: 'Heebo', 'Rubik', sans-serif;
+    }
+    .math-ltr {
+      direction: ltr;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .grid-dot {
+      cursor: pointer;
+      transition: r 0.15s ease, fill 0.15s ease;
+    }
+    .grid-dot:hover {
+      r: 8.5;
+      fill: #4f46e5;
+    }
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-indigo-50 via-sky-50 to-emerald-50 min-h-screen text-slate-800 p-3 sm:p-6">
+
+  <div class="max-w-4xl mx-auto">
+
+    <!-- מסך פתיחה -->
+    <section id="start-screen" class="bg-white/95 backdrop-blur rounded-3xl shadow-xl border-2 border-indigo-100 p-6 sm:p-10 text-center my-6">
+      <div class="inline-flex items-center gap-2 bg-indigo-100 text-indigo-800 px-4 py-1.5 rounded-full font-extrabold text-sm mb-4">
+        <span>🎓</span>
+        <span>תרגול אינטראקטיבי • כיתה ג'</span>
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-black text-slate-900 mb-3">
+        אלופי החשבון של כיתה ג'! 🚀
+      </h1>
+      <p class="text-slate-600 text-lg sm:text-xl max-w-2xl mx-auto mb-6 leading-relaxed">
+        10 תחנות מאתגרות עם מספרים חדשים בכל משחק: לוח כפל, בעיות מילוליות, סדר פעולות, ישר המספרים, מבנה עשרוני, זוויות, מצולעים ושעון!
+      </p>
+
+      <div class="bg-amber-50 border-2 border-amber-200 rounded-2xl p-4 max-w-md mx-auto mb-6 text-amber-900 text-sm sm:text-base font-bold">
+        💡 אפשר לבדוק תשובה, לראות הסבר מפורט ולעבור לשאלה הבאה בכל שלב — גם אם טעיתם!
+      </div>
+
+      <div class="max-w-xs mx-auto mb-6">
+        <label for="player-name" class="block text-sm font-bold text-slate-600 mb-2">איך קוראים לך? (לא חובה)</label>
+        <input type="text" id="player-name" placeholder="הקלידו שם..." class="w-full px-4 py-3 text-center text-lg font-bold border-2 border-indigo-200 rounded-2xl focus:border-indigo-500 focus:outline-none">
+      </div>
+
+      <div class="flex flex-wrap items-center justify-center gap-3">
+        <button type="button" onclick="startGame()" class="bg-gradient-to-l from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-extrabold text-xl px-10 py-4 rounded-2xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all cursor-pointer">
+          מתחילים לשחק! 🎯
+        </button>
+        <button type="button" onclick="openResultsModal()" class="bg-white hover:bg-indigo-50 text-indigo-800 border-2 border-indigo-200 font-extrabold text-base sm:text-lg px-6 py-4 rounded-2xl shadow-sm transition-all cursor-pointer">
+          📊 צפייה בתוצאות שנשמרו
+        </button>
+      </div>
+    </section>
+
+    <!-- סרגל התקדמות עליון (מוסתר במסך הפתיחה) -->
+    <header id="game-header" class="hidden bg-white/95 backdrop-blur rounded-3xl shadow-md border border-indigo-100 p-4 mb-5">
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+        <div class="flex items-center gap-2">
+          <div class="bg-indigo-100 text-indigo-900 px-4 py-1.5 rounded-2xl font-bold text-sm sm:text-base border border-indigo-200">
+            שאלה <span id="current-q-num">1</span> מתוך 10
+          </div>
+          <button type="button" onclick="regenerateAndRestart()" title="צור סט חדש של 10 שאלות" class="bg-slate-100 hover:bg-indigo-100 text-slate-700 hover:text-indigo-800 border border-slate-300 px-3 py-1.5 rounded-2xl font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-1">
+            <span>🔄</span>
+            <span class="hidden sm:inline">החלף לשאלות חדשות</span>
+          </button>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <span id="header-player-badge" class="hidden sm:inline-block text-sm font-bold text-slate-600 bg-slate-100 px-3 py-1.5 rounded-2xl"></span>
+          <div class="bg-amber-100 text-amber-900 px-4 py-1.5 rounded-2xl font-extrabold text-sm sm:text-base border border-amber-200">
+            ⭐ ניקוד: <span id="score-display">0</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="w-full h-3 bg-slate-100 rounded-full overflow-hidden border border-slate-200">
+        <div id="progress-bar" class="h-full bg-gradient-to-l from-indigo-500 to-emerald-500 transition-all duration-300" style="width: 10%;"></div>
+      </div>
+    </header>
+
+    <!-- אזור השאלה הפעילה -->
+    <section id="question-container" class="hidden bg-white/95 backdrop-blur rounded-3xl shadow-xl border-2 border-indigo-100 p-5 sm:p-8">
+      <div class="mb-5">
+        <span id="q-badge" class="inline-block bg-indigo-100 text-indigo-800 text-xs sm:text-sm font-extrabold px-3.5 py-1 rounded-full mb-2"></span>
+        <h2 id="q-title" class="text-xl sm:text-2xl font-extrabold text-slate-900 leading-snug"></h2>
+      </div>
+
+      <div id="q-body" class="my-6"></div>
+
+      <div id="feedback-box" class="hidden rounded-2xl p-4 sm:p-5 my-5 border-2 transition-all">
+        <div class="flex items-start gap-3">
+          <span id="feedback-icon" class="text-3xl"></span>
+          <div>
+            <h3 id="feedback-heading" class="font-black text-lg mb-1"></h3>
+            <p id="feedback-explanation" class="text-slate-700 font-medium leading-relaxed"></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-slate-100">
+        <button type="button" id="skip-btn" onclick="nextQuestion(true)" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-5 py-3 rounded-2xl transition-colors cursor-pointer text-sm sm:text-base">
+          דלג לשאלה הבאה ⏭️
+        </button>
+
+        <div class="flex items-center gap-3 mr-auto">
+          <button type="button" id="check-btn" onclick="checkCurrentQuestion()" class="bg-gradient-to-l from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-extrabold text-base sm:text-lg px-7 py-3.5 rounded-2xl shadow-md hover:shadow-lg transition-all cursor-pointer">
+            בדיקת תשובה ✔️
+          </button>
+
+          <button type="button" id="next-btn" onclick="nextQuestion(false)" class="hidden bg-gradient-to-l from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-extrabold text-base sm:text-lg px-7 py-3.5 rounded-2xl shadow-md hover:shadow-lg transition-all cursor-pointer">
+            לשאלה הבאה ⬅️
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- מסך סיכום -->
+    <main id="summary-screen" class="hidden bg-white/95 backdrop-blur rounded-3xl shadow-xl border-2 border-indigo-100 p-6 sm:p-10 text-center my-6">
+      <div id="summary-trophy" class="text-6xl mb-3">🏆</div>
+      <h2 id="summary-title" class="text-3xl sm:text-4xl font-black text-slate-900 mb-2">כל הכבוד!</h2>
+      <p id="summary-subtitle" class="text-lg text-slate-600 font-medium mb-6"></p>
+
+      <div class="inline-flex items-center gap-4 bg-indigo-50 border-2 border-indigo-200 rounded-3xl px-8 py-4 mb-6">
+        <div>
+          <span class="block text-sm font-bold text-indigo-700">הציון הסופי שלך</span>
+          <span id="final-score" class="text-4xl font-black text-indigo-950">0 / 100</span>
+        </div>
+      </div>
+
+      <div id="results-breakdown" class="grid grid-cols-5 sm:grid-cols-10 gap-2 max-w-xl mx-auto mb-7"></div>
+
+      <div class="bg-emerald-50/90 border-2 border-emerald-200 rounded-2xl p-4 max-w-xl mx-auto mb-6">
+        <p id="save-status-msg" class="text-sm sm:text-base font-extrabold text-emerald-900 mb-3">
+          ⏳ שומר את התוצאות...
+        </p>
+        <div class="flex flex-wrap items-center justify-center gap-3">
+          <button type="button" onclick="copyCurrentSummary()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-5 py-2.5 rounded-xl shadow-sm transition-all cursor-pointer text-sm sm:text-base">
+            📋 העתק סיכום לשליחה (וואטסאפ / מייל)
+          </button>
+          <button type="button" onclick="openResultsModal()" class="bg-white hover:bg-emerald-100 text-emerald-900 border border-emerald-300 font-bold px-5 py-2.5 rounded-xl transition-all cursor-pointer text-sm sm:text-base">
+            📊 לכל התוצאות השמורות
+          </button>
+        </div>
+        <p id="copy-toast" class="hidden text-xs font-extrabold text-indigo-700 mt-2">
+          ✔️ הסיכום הועתק! אפשר להדביק ולשלוח עכשיו.
+        </p>
+      </div>
+
+      <div class="bg-amber-50/80 rounded-2xl p-4 max-w-md mx-auto mb-6 border border-amber-200">
+        <p class="font-bold text-amber-900 mb-3">11. איך היה לי המשחק?</p>
+        <div class="flex justify-center gap-3" id="mood-buttons">
+          <button type="button" onclick="selectMood(this, 'קל וכיף', 'איזה כיף שהיה לך קל ומהנה! 🌟')" class="mood-btn bg-white hover:bg-amber-100 border-2 border-amber-200 rounded-2xl px-4 py-2 text-2xl transition-all cursor-pointer flex flex-col items-center">
+            <span>🤩</span>
+            <span class="text-xs font-bold mt-1 text-slate-700">קל וכיף</span>
+          </button>
+          <button type="button" onclick="selectMood(this, 'מאתגר במידה', 'מעולה! אתגר במידה הנכונה מצמיח אלופים! 😊')" class="mood-btn bg-white hover:bg-amber-100 border-2 border-amber-200 rounded-2xl px-4 py-2 text-2xl transition-all cursor-pointer flex flex-col items-center">
+            <span>🙂</span>
+            <span class="text-xs font-bold mt-1 text-slate-700">מאתגר במידה</span>
+          </button>
+          <button type="button" onclick="selectMood(this, 'קצת קשה', 'כל הכבוד שלא ויתרת! סיבוב נוסף יהפוך את זה לקל יותר 💪')" class="mood-btn bg-white hover:bg-amber-100 border-2 border-amber-200 rounded-2xl px-4 py-2 text-2xl transition-all cursor-pointer flex flex-col items-center">
+            <span>😅</span>
+            <span class="text-xs font-bold mt-1 text-slate-700">קצת קשה</span>
+          </button>
+        </div>
+        <p id="mood-response" class="text-sm font-bold text-indigo-700 mt-2 hidden"></p>
+      </div>
+
+      <button type="button" onclick="regenerateAndRestart()" class="bg-gradient-to-l from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-extrabold text-xl px-9 py-4 rounded-2xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all cursor-pointer">
+        🔄 שחק שוב עם שאלות חדשות לגמרי!
+      </button>
+    </main>
+
+  </div>
+
+  <!-- חלון צפייה בכל התוצאות שנשמרו -->
+  <div id="results-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6">
+    <div class="bg-white rounded-3xl shadow-2xl border-2 border-indigo-100 w-full max-w-3xl max-h-[88vh] flex flex-col overflow-hidden">
+      <div class="p-5 bg-indigo-50 border-b border-indigo-100 flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h3 class="text-xl sm:text-2xl font-black text-indigo-950">📊 לוח תוצאות</h3>
+          <p id="modal-subtitle" class="text-xs sm:text-sm text-indigo-700 font-medium">מציג את מספר הנקודות של כל משתתף</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="button" id="teacher-toggle-btn" onclick="toggleTeacherAuthBox()" class="bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 font-extrabold text-xs sm:text-sm px-3.5 py-2 rounded-xl cursor-pointer transition-all">
+            🔒 כניסת מורה לפירוט טעויות
+          </button>
+          <button type="button" onclick="closeResultsModal()" class="bg-white hover:bg-rose-100 text-slate-700 hover:text-rose-700 font-black px-3.5 py-2 rounded-xl border border-slate-200 cursor-pointer">
+            ✕ סגור
+          </button>
+        </div>
+      </div>
+
+      <div id="teacher-auth-box" class="hidden bg-amber-50 border-b border-amber-200 p-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div class="text-sm font-bold text-amber-950">
+            <span>🔐 הזינו קוד מורה לצפייה בפירוט השאלות והטעויות</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <input type="password" id="teacher-pin-input" maxlength="10" placeholder="קוד מורה..." onkeydown="if(event.key==='Enter') verifyTeacherPin()" class="w-32 px-3 py-1.5 text-center font-extrabold border-2 border-amber-300 rounded-xl bg-white focus:border-amber-600 focus:outline-none">
+            <button type="button" onclick="verifyTeacherPin()" class="bg-amber-600 hover:bg-amber-700 text-white font-extrabold px-4 py-1.5 rounded-xl text-sm cursor-pointer">
+              אישור
+            </button>
+          </div>
+        </div>
+        <p id="teacher-pin-error" class="hidden text-xs font-extrabold text-rose-600 mt-2">❌ קוד שגוי, נסו שוב.</p>
+      </div>
+
+      <div id="teacher-admin-bar" class="hidden bg-emerald-50 border-b border-emerald-200 px-5 py-2.5 flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm">
+        <span class="font-extrabold text-emerald-900">👩‍🏫 מצב מורה פעיל: פירוט מלא, מחיקה וייצוא לאקסל</span>
+        <div class="flex flex-wrap items-center gap-2">
+          <button type="button" onclick="exportResultsToExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-3 py-1 rounded-lg text-xs cursor-pointer shadow-xs">📥 ייצוא לאקסל (CSV)</button>
+          <button type="button" onclick="askDeleteAllResults()" class="bg-rose-100 hover:bg-rose-200 text-rose-800 border border-rose-300 font-extrabold px-3 py-1 rounded-lg text-xs cursor-pointer">🗑️ מחק הכל</button>
+          <button type="button" onclick="toggleChangePinBox()" class="text-emerald-800 underline font-bold cursor-pointer">שינוי קוד</button>
+          <span>|</span>
+          <button type="button" onclick="logoutTeacherMode()" class="text-rose-700 font-extrabold cursor-pointer">נעל מצב מורה 🔒</button>
+        </div>
+      </div>
+
+      <div id="delete-all-confirm-box" class="hidden bg-rose-50 border-b border-rose-200 px-5 py-3 flex flex-wrap items-center justify-between gap-2">
+        <span class="text-xs sm:text-sm font-extrabold text-rose-900">⚠️ האם למחוק לצמיתות את כל התוצאות השמורות?</span>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="confirmDeleteAllResults()" class="bg-rose-600 hover:bg-rose-700 text-white font-extrabold px-3.5 py-1.5 rounded-lg text-xs cursor-pointer">כן, מחק הכל</button>
+          <button type="button" onclick="cancelDeleteAllResults()" class="bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 font-bold px-3 py-1.5 rounded-lg text-xs cursor-pointer">ביטול</button>
+        </div>
+      </div>
+
+      <div id="change-pin-box" class="hidden bg-slate-100 border-b border-slate-200 px-5 py-3 flex flex-wrap items-center justify-between gap-2">
+        <span class="text-xs font-bold text-slate-700">הגדירו קוד מורה חדש (לסשן הנוכחי):</span>
+        <div class="flex items-center gap-2">
+          <input type="text" id="new-teacher-pin" placeholder="קוד חדש..." class="w-28 px-2.5 py-1 text-center font-bold border border-slate-300 rounded-lg bg-white text-sm">
+          <button type="button" onclick="saveNewTeacherPin()" class="bg-indigo-600 text-white font-bold px-3 py-1 rounded-lg text-xs cursor-pointer">שמור</button>
+        </div>
+      </div>
+
+      <div id="saved-results-list" class="p-5 overflow-y-auto space-y-3 flex-1 bg-slate-50/60">
+        <p class="text-center text-slate-500 font-bold py-8">טוען תוצאות שמורות...</p>
+      </div>
+
+      <div class="p-4 bg-white border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
+        <button type="button" onclick="copyAllResultsReport()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-5 py-2.5 rounded-xl text-sm cursor-pointer">
+          📋 העתק דוח תוצאות לשליחה
+        </button>
+        <span id="modal-copy-toast" class="hidden text-xs font-extrabold text-emerald-700">✔️ הדוח הועתק ללוח!</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ניהול שמירת תוצאות (כולל גיבוי מקומי במכשיר אם אין חיבור חיצוני) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    const LOCAL_RESULTS_KEY = 'grade3_math_results_local_v1';
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+    let db = null;
+    let auth = null;
+    let currentUser = null;
+    let savedAttemptsCache = loadLocalResults();
+
+    function loadLocalResults() {
+      try {
+        const raw = localStorage.getItem(LOCAL_RESULTS_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveLocalResults(list) {
+      try {
+        localStorage.setItem(LOCAL_RESULTS_KEY, JSON.stringify(list));
+      } catch (e) {}
+    }
+
+    try {
+      if (typeof __firebase_config !== 'undefined') {
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        db = getFirestore(app);
+        auth = getAuth(app);
+
+        onAuthStateChanged(auth, (user) => {
+          currentUser = user;
+          if (user && db) {
+            subscribeToResults();
+          }
+        });
+
+        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+          await signInWithCustomToken(auth, __initial_auth_token);
+        } else {
+          await signInAnonymously(auth);
+        }
+      }
+    } catch (err) {
+      console.error("Storage init error:", err);
+    }
+
+    function subscribeToResults() {
+      if (!db || !currentUser) return;
+      const resultsRef = collection(db, 'artifacts', appId, 'public', 'data', 'grade3_math_results');
+      onSnapshot(resultsRef, (snapshot) => {
+        const items = [];
+        snapshot.forEach((docSnap) => {
+          items.push({ id: docSnap.id, ...docSnap.data() });
+        });
+        items.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+        savedAttemptsCache = items;
+        saveLocalResults(items);
+        if (typeof window.renderSavedResultsList === 'function') {
+          window.renderSavedResultsList(items);
+        }
+      }, (error) => {
+        console.error("Snapshot error:", error);
+      });
+    }
+
+    window.saveAttemptToCloud = async function(attemptPayload) {
+      const statusEl = document.getElementById('save-status-msg');
+      const localId = 'loc_' + Date.now();
+      const record = { id: localId, ...attemptPayload, timestamp: Date.now() };
+
+      if (!db || !currentUser) {
+        savedAttemptsCache.unshift(record);
+        saveLocalResults(savedAttemptsCache);
+        if (statusEl) statusEl.textContent = "✔️ התשובות והציון נשמרו בהצלחה בלוח התוצאות!";
+        return localId;
+      }
+      try {
+        const resultsRef = collection(db, 'artifacts', appId, 'public', 'data', 'grade3_math_results');
+        const docRef = await addDoc(resultsRef, {
+          ...attemptPayload,
+          userId: currentUser.uid,
+          timestamp: Date.now()
+        });
+        if (statusEl) {
+          statusEl.textContent = "☁️ התשובות והציון נשמרו בהצלחה בדוח התוצאות!";
+        }
+        return docRef.id;
+      } catch (err) {
+        savedAttemptsCache.unshift(record);
+        saveLocalResults(savedAttemptsCache);
+        if (statusEl) statusEl.textContent = "✔️ התוצאות נשמרו במכשיר ומוכנות לשליחה!";
+        return localId;
+      }
+    };
+
+    window.updateAttemptMoodInCloud = async function(docId, moodLabel) {
+      if (!docId) return;
+      const idx = savedAttemptsCache.findIndex(x => x.id === docId);
+      if (idx !== -1) {
+        savedAttemptsCache[idx].mood = moodLabel;
+        saveLocalResults(savedAttemptsCache);
+      }
+      if (!db || !currentUser || String(docId).startsWith('loc_')) return;
+      try {
+        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'grade3_math_results', docId);
+        await updateDoc(docRef, { mood: moodLabel });
+      } catch (err) {}
+    };
+
+    window.deleteAttemptFromCloud = async function(docId) {
+      if (!docId) return;
+      savedAttemptsCache = savedAttemptsCache.filter(x => x.id !== docId);
+      saveLocalResults(savedAttemptsCache);
+      if (typeof window.renderSavedResultsList === 'function') {
+        window.renderSavedResultsList(savedAttemptsCache);
+      }
+      if (!db || !currentUser || String(docId).startsWith('loc_')) return;
+      try {
+        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'grade3_math_results', docId);
+        await deleteDoc(docRef);
+      } catch (err) {}
+    };
+
+    window.deleteAllAttemptsFromCloud = async function() {
+      const oldCache = [...savedAttemptsCache];
+      savedAttemptsCache = [];
+      saveLocalResults([]);
+      if (typeof window.renderSavedResultsList === 'function') {
+        window.renderSavedResultsList([]);
+      }
+      if (!db || !currentUser) return;
+      try {
+        const promises = oldCache
+          .filter(item => !String(item.id).startsWith('loc_'))
+          .map(item => deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'grade3_math_results', item.id)));
+        await Promise.all(promises);
+      } catch (err) {}
+    };
+
+    window.getSavedAttemptsCache = () => savedAttemptsCache;
+  <\/script>
+
+  <script>
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let playerName = "";
+    let questionResults = [];
+    let questionLogs = [];
+    let hasCheckedCurrent = false;
+    let questions = [];
+    let lastSeedSignature = "";
+    let currentSavedDocId = null;
+    let selectedMoodLabel = "לא סומן";
+    let gridPolygonState = { points: [], targetVertices: 3 };
+    let isTeacherUnlocked = false;
+    let teacherPinCode = "3275";
+    let expandedStudentAttemptIds = new Set();
+    let pendingDeleteAttemptId = null;
+
+    function randInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function pickRandom(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function shuffleArray(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function normalizeHebrewText(str) {
+      return String(str || "")
+        .replace(/[\u0591-\u05C7]/g, "")
+        .replace(/["'״׳\-–,.:;!?]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    function numberToHebrewWords(num) {
+      const hundredsMap = {
+        100: "מאה", 200: "מאתיים", 300: "שלוש מאות", 400: "ארבע מאות",
+        500: "חמש מאות", 600: "שש מאות", 700: "שבע מאות", 800: "שמונה מאות", 900: "תשע מאות"
+      };
+      const tensMap = {
+        10: "עשר", 20: "עשרים", 30: "שלושים", 40: "ארבעים",
+        50: "חמישים", 60: "שישים", 70: "שבעים", 80: "שמונים", 90: "תשעים"
+      };
+      const onesMap = {
+        1: "אחת", 2: "שתיים", 3: "שלוש", 4: "ארבע", 5: "חמש",
+        6: "שש", 7: "שבע", 8: "שמונה", 9: "תשע"
+      };
+      const teensMap = {
+        11: "אחת עשרה", 12: "שתים עשרה", 13: "שלוש עשרה", 14: "ארבע עשרה", 15: "חמש עשרה",
+        16: "שש עשרה", 17: "שבע עשרה", 18: "שמונה עשרה", 19: "תשע עשרה"
+      };
+
+      const h = Math.floor(num / 100) * 100;
+      const rem = num % 100;
+      const parts = [];
+      if (h > 0) parts.push(hundredsMap[h]);
+      if (rem > 0) {
+        if (rem >= 11 && rem <= 19) {
+          parts.push((h > 0 ? "ו" : "") + teensMap[rem]);
+        } else {
+          const t = Math.floor(rem / 10) * 10;
+          const o = rem % 10;
+          if (t > 0 && o > 0) {
+            parts.push(tensMap[t]);
+            parts.push("ו" + onesMap[o]);
+          } else if (t > 0) {
+            parts.push((h > 0 ? "ו" : "") + tensMap[t]);
+          } else if (o > 0) {
+            parts.push((h > 0 ? "ו" : "") + onesMap[o]);
+          }
+        }
+      }
+      return parts.join(" ");
+    }
+
+    function generateQuestion1() {
+      const cols = shuffleArray([2, 3, 4, 5, 6, 7, 8, 9]).slice(0, 3).sort((a, b) => a - b);
+      const rows = shuffleArray([2, 3, 4, 5, 6, 7, 8, 9, 10]).slice(0, 3).sort((a, b) => a - b);
+      const chain = [randInt(2, 4), randInt(2, 4), randInt(2, 5)];
+      const chainAns = chain[0] * chain[1] * chain[2];
+
+      const allCoords = [];
+      for (let r = 0; r < 3; r++) {
+        for (let c = 0; c < 3; c++) {
+          allCoords.push(`${r}-${c}`);
+        }
+      }
+      const hiddenSet = new Set(shuffleArray(allCoords).slice(0, 5));
+
+      const rowsHtml = rows.map((rVal, rIdx) => {
+        const cellsHtml = cols.map((cVal, cIdx) => {
+          const prod = rVal * cVal;
+          if (hiddenSet.has(`${rIdx}-${cIdx}`)) {
+            return `<td class="p-2 border border-indigo-200 bg-indigo-50/40"><input type="number" data-ans="${prod}" class="q1-inp w-16 h-11 text-center text-xl font-extrabold border-2 border-indigo-300 rounded-xl focus:border-indigo-600 focus:outline-none bg-white" placeholder="?"></td>`;
+          }
+          return `<td class="p-3 border border-indigo-200 text-slate-700">${prod}</td>`;
+        }).join('');
+        return `<tr><th class="p-3 border border-indigo-200 bg-indigo-100 text-indigo-900">${rVal}</th>${cellsHtml}</tr>`;
+      }).join('');
+
+      return {
+        id: 1,
+        badge: "שאלה 1 • לוח הכפל וכפל",
+        title: "א. השלימו את לוח הכפל. ב. פתרו את תרגיל הכפל:",
+        render: () => `
+          <div class="flex flex-col items-center gap-6">
+              <div class="overflow-x-auto w-full max-w-md">
+                <table class="w-full border-collapse text-center text-xl font-bold rounded-2xl overflow-hidden shadow-sm">
+                  <thead>
+                    <tr class="bg-indigo-600 text-white">
+                      <th class="p-3 border border-indigo-500 bg-indigo-800 text-2xl">×</th>
+                      ${cols.map(c => `<th class="p-3 border border-indigo-500">${c}</th>`).join('')}
+                    </tr>
+                  </thead>
+                  <tbody class="bg-white">${rowsHtml}</tbody>
+                </table>
+              </div>
+
+              <div class="bg-amber-50 border-2 border-amber-200 rounded-2xl p-4 w-full max-w-md flex items-center justify-between gap-3">
+                <span class="font-extrabold text-amber-900">ב. תרגיל כפל:</span>
+                <div class="math-ltr text-2xl font-extrabold text-slate-800">
+                  <span>${chain[0]} × ${chain[1]} × ${chain[2]} =</span>
+                  <input type="number" data-ans="${chainAns}" class="q1-inp w-20 h-12 text-center text-xl font-extrabold border-2 border-amber-400 rounded-xl focus:border-amber-600 focus:outline-none bg-white" placeholder="?">
+                </div>
+              </div>
+            </div>
+          `,
+        check: () => {
+          const inputs = document.querySelectorAll('.q1-inp');
+          let allCorrect = true;
+          const ansList = [];
+          inputs.forEach(inp => {
+            const expected = parseInt(inp.dataset.ans, 10);
+            ansList.push(expected);
+            const val = parseInt(inp.value, 10);
+            if (val === expected) {
+              inp.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-800');
+            } else {
+              allCorrect = false;
+              inp.classList.add('border-rose-500', 'bg-rose-50', 'text-rose-800');
+            }
+          });
+          return {
+            isCorrect: allCorrect,
+            userAnswerText: Array.from(inputs).map(inp => inp.value.trim() || 'ריק').join(', '),
+            correctAnswerText: ansList.join(', '),
+            explanation: `המספרים החסרים בלוח הכפל הם: ${ansList.slice(0, -1).join(', ')}, ותוצאת תרגיל הכפל היא ${chainAns}.`
+          };
+        }
+      };
+    }
+
+    function generateQuestion2() {
+      const scenarios = [
+        {
+          emoji: "🥗🥒",
+          bg: "bg-emerald-50 border-emerald-200",
+          buildText: (a, b, c, d, days) =>
+            `מְנַחֵם אוֹכֵל בְּכָל יוֹם <span class="font-bold text-emerald-800">${a} מְלָפְפוֹנִים</span>, <span class="font-bold text-emerald-800">${b} עַגְבָנִיּוֹת</span>, <span class="font-bold text-emerald-800">${c} פִּלְפְּלִים</span> וְ<span class="font-bold text-emerald-800">${d} גְּזָרִים</span>.<br><strong class="text-indigo-900">כַּמָּה יְרָקוֹת מְנַחֵם אוֹכֵל בְּמֶשֶׁךְ ${days} יָמִים?</strong>`,
+          unit: "ירקות"
+        },
+        {
+          emoji: "⭐🦁",
+          bg: "bg-amber-50 border-amber-200",
+          buildText: (a, b, c, d, days) =>
+            `נוֹעָה אוֹסֶפֶת בְּכָל יוֹם <span class="font-bold text-amber-800">${a} מַדְבֵּקוֹת כּוֹכָב</span>, <span class="font-bold text-amber-800">${b} מַדְבֵּקוֹת לֵב</span>, <span class="font-bold text-amber-800">${c} מַדְבֵּקוֹת חַיּוֹת</span> וְ<span class="font-bold text-amber-800">${d} מַדְבֵּקוֹת סְמַיְלִי</span>.<br><strong class="text-indigo-900">כַּמָּה מַדְבֵּקוֹת תֶּאֱסֹף בְּמֶשֶׁךְ ${days} יָמִים?</strong>`,
+          unit: "מדבקות"
+        },
+        {
+          emoji: "🍎🍌",
+          bg: "bg-rose-50 border-rose-200",
+          buildText: (a, b, c, d, days) =>
+            `בְּסַל הַפֵּרוֹת שֶׁל הַמִּשְׁפָּחָה שָׂמִים בְּכָל יוֹם <span class="font-bold text-rose-800">${a} תַּפּוּחִים</span>, <span class="font-bold text-rose-800">${b} בָּנָנוֹת</span>, <span class="font-bold text-rose-800">${c} תַּפּוּזִים</span> וְ<span class="font-bold text-rose-800">${d} אֲגָסִים</span>.<br><strong class="text-indigo-900">כַּמָּה פֵּרוֹת יִהְיוּ בְּסַךְ הַכֹּל בְּמֶשֶׁךְ ${days} יָמִים?</strong>`,
+          unit: "פירות"
+        },
+        {
+          emoji: "📿✨",
+          bg: "bg-purple-50 border-purple-200",
+          buildText: (a, b, c, d, days) =>
+            `יָעֵל מְכִינָה שַׁרְשְׁרָאוֹת וּמַשְׁחִילָה בְּכָל יוֹם <span class="font-bold text-purple-800">${a} חֲרוּזִים אֲדֻמִּים</span>, <span class="font-bold text-purple-800">${b} כְּחֻלִּים</span>, <span class="font-bold text-purple-800">${c} יְרֻקִּים</span> וְ<span class="font-bold text-purple-800">${d} צְהֻבִּים</span>.<br><strong class="text-indigo-900">כַּמָּה חֲרוּזִים הִיא מַשְׁחִילָה בְּמֶשֶׁךְ ${days} יָמִים?</strong>`,
+          unit: "חרוזים"
+        },
+        {
+          emoji: "✏️🖍️",
+          bg: "bg-sky-50 border-sky-200",
+          buildText: (a, b, c, d, days) =>
+            `בְּכָל קַלְמָר שֶׁל כִּתָּה ג' יֵשׁ <span class="font-bold text-sky-800">${a} עֶפְרוֹנוֹת</span>, <span class="font-bold text-sky-800">${b} טוּשִׁים</span>, <span class="font-bold text-sky-800">${c} מַחֲקִים</span> וְ<span class="font-bold text-sky-800">${d} מְחַדְּדִים</span>.<br><strong class="text-indigo-900">כַּמָּה כְּלֵי כְּתִיבָה יֵשׁ בְּסַךְ הַכֹּל בְּ-${days} קַלְמָרִים?</strong>`,
+          unit: "פריטים"
+        }
+      ];
+
+      const sc = pickRandom(scenarios);
+      const a = randInt(2, 3), b = randInt(1, 3), c = randInt(1, 2), d = randInt(1, 2);
+      const dailySum = a + b + c + d;
+      const days = randInt(4, 8);
+      const totalAns = dailySum * days;
+
+      return {
+        id: 2,
+        badge: "שאלה 2 • בעיה מילולית (חיבור וכפל)",
+        title: "קראו את השאלה וענו:",
+        render: () => `
+          <div class="${sc.bg} border-2 rounded-2xl p-5 mb-5 flex flex-col sm:flex-row items-center gap-4">
+            <div class="text-5xl">${sc.emoji}</div>
+            <p class="text-lg sm:text-xl font-medium text-slate-800 leading-relaxed">
+              ${sc.buildText(a, b, c, d, days)}
+            </p>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-xl mx-auto">
+            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+              <label class="block text-sm font-bold text-slate-600 mb-2">שלב א' (עזר): כמה ${sc.unit} יש בקבוצה/יום אחד?</label>
+              <input type="number" id="q2_daily" class="w-full h-12 text-center text-xl font-bold border-2 border-indigo-200 rounded-xl focus:border-indigo-500 focus:outline-none" placeholder="סכום ביניים">
+            </div>
+            <div class="bg-indigo-50/70 p-4 rounded-2xl border-2 border-indigo-200">
+              <label class="block text-sm font-bold text-indigo-900 mb-2">תשובה סופית: כמה ${sc.unit} בסך הכל?</label>
+              <input type="number" id="q2_total" class="w-full h-12 text-center text-xl font-bold border-2 border-indigo-400 rounded-xl focus:border-indigo-600 focus:outline-none" placeholder="תשובה סופית">
+            </div>
+          </div>
+        `,
+        check: () => {
+          const totalInput = document.getElementById('q2_total');
+          const dailyInput = document.getElementById('q2_daily');
+          const totalVal = parseInt(totalInput.value, 10);
+          const dailyVal = parseInt(dailyInput.value, 10);
+
+          if (dailyVal === dailySum) dailyInput.classList.add('border-emerald-500', 'bg-emerald-50');
+          else if (!isNaN(dailyVal)) dailyInput.classList.add('border-rose-400');
+
+          const isCorrect = (totalVal === totalAns);
+          totalInput.classList.add(isCorrect ? 'border-emerald-500' : 'border-rose-500', isCorrect ? 'bg-emerald-50' : 'bg-rose-50');
+
+          return {
+            isCorrect,
+            userAnswerText: `ביניים: ${dailyInput.value.trim() || 'ריק'} | סופי: ${totalInput.value.trim() || 'ריק'}`,
+            correctAnswerText: `ביניים: ${dailySum} | סופי: ${totalAns}`,
+            explanation: `קודם מחברים: ${a} + ${b} + ${c} + ${d} = ${dailySum}. לאחר מכן כופלים ב-${days}: ${dailySum} × ${days} = ${totalAns} ${sc.unit}.`
+          };
+        }
+      };
+    }
+
+    function generateQuestion3() {
+      const k1 = randInt(2, 6), d1 = randInt(2, 7), d2 = randInt(2, 4);
+      const start1 = k1 * d1 * d2;
+      const expr1 = `${start1} : ${d1} : ${d2} =`;
+      const ans1 = k1;
+
+      const step2 = randInt(2, 5), divA = randInt(4, 9), divB = randInt(2, 3), mulB = randInt(3, 9);
+      const start2 = step2 * divB * divA;
+      const expr2 = `${start2} : ${divA} : ${divB} × ${mulB} =`;
+      const ans2 = step2 * mulB;
+
+      const q3_base = randInt(3, 9), q3_d1 = randInt(3, 8), q3_m = randInt(2, 6);
+      const prod3 = q3_base * q3_m;
+      const possibleDivs = [2, 3, 4, 5, 6].filter(d => prod3 % d === 0 && d !== q3_m);
+      const q3_d2 = possibleDivs.length > 0 ? pickRandom(possibleDivs) : 2;
+      const adjBase = (prod3 % q3_d2 === 0) ? q3_base : q3_base * q3_d2;
+      const start3 = adjBase * q3_d1;
+      const expr3 = `${start3} : ${q3_d1} × ${q3_m} : ${q3_d2} =`;
+      const ans3 = (adjBase * q3_m) / q3_d2;
+
+      const items = [
+        { label: "א.", expr: expr1, ans: ans1, id: "q3_0" },
+        { label: "ב.", expr: expr2, ans: ans2, id: "q3_1" },
+        { label: "ג.", expr: expr3, ans: ans3, id: "q3_2" }
+      ];
+
+      return {
+        id: 3,
+        badge: "שאלה 3 • סדר פעולות (כפל וחילוק)",
+        title: "פתרו את התרגילים (זכרו לפתור משמאל לימין):",
+        render: () => `
+          <div class="grid grid-cols-1 gap-4 max-w-xl mx-auto">
+            ${items.map(item => `
+              <div class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-4 flex items-center justify-between gap-3">
+                <span class="font-extrabold text-indigo-700 text-xl">${item.label}</span>
+                <div class="math-ltr text-2xl font-bold text-slate-800">
+                  <span>${item.expr}</span>
+                  <input type="number" id="${item.id}" data-ans="${item.ans}" class="q3-inp w-24 h-12 text-center text-xl font-extrabold border-2 border-indigo-300 rounded-xl focus:border-indigo-600 focus:outline-none bg-white" placeholder="?">
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `,
+        check: () => {
+          const inputs = document.querySelectorAll('.q3-inp');
+          let allCorrect = true;
+          inputs.forEach(inp => {
+            const expected = parseInt(inp.dataset.ans, 10);
+            const val = parseInt(inp.value, 10);
+            if (val === expected) {
+              inp.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-800');
+            } else {
+              allCorrect = false;
+              inp.classList.add('border-rose-500', 'bg-rose-50', 'text-rose-800');
+            }
+          });
+          return {
+            isCorrect: allCorrect,
+            userAnswerText: Array.from(inputs).map((inp, idx) => `${['א', 'ב', 'ג'][idx]}: ${inp.value.trim() || 'ריק'}`).join(' | '),
+            correctAnswerText: `א: ${ans1} | ב: ${ans2} | ג: ${ans3}`,
+            explanation: `התשובות הנכונות: א) ${ans1} | ב) ${ans2} | ג) ${ans3}. בכפל וחילוק פותרים תמיד לפי הסדר משמאל לימין.`
+          };
+        }
+      };
+    }
+
+    function generateQuestion4() {
+      const itemsPool = [
+        { emoji: "🥨🍿", small: "חֲטִיף קָטָן", large: "חֲטִיף גָּדוֹל", pluralSmall: "חֲטִיפִים קְטַנִּים", pluralLarge: "חֲטִיפִים גְּדוֹלִים" },
+        { emoji: "📓📘", small: "מַחְבֶּרֶת קְטַנָּה", large: "מַחְבֶּרֶת גְּדוֹלָה", pluralSmall: "מַחְבָּרוֹת קְטַנּוֹת", pluralLarge: "מַחְבָּרוֹת גְּדוֹלוֹת" },
+        { emoji: "🍦🍨", small: "גְּבִיעַ גְּלִידָה קָטָן", large: "גְּבִיעַ גְּלִידָה גָּדוֹל", pluralSmall: "גְּבִיעֵי גְּלִידָה קְטַנִּים", pluralLarge: "גְּבִיעֵי גְּלִידָה גְּדוֹלִים" },
+        { emoji: "🎟️🎫", small: "כַּרְטִיס לְיֶלֶד", large: "כַּרְטִיס לִמְבֻגָּר", pluralSmall: "כַּרְטִיסִים לִילָדִים", pluralLarge: "כַּרְטִיסִים לִמְבֻגָּרִים" },
+        { emoji: "🖍️🎨", small: "חֲבִילַת טוּשִׁים קְטַנָּה", large: "חֲבִילַת טוּשִׁים גְּדוֹלָה", pluralSmall: "חֲבִילוֹת טוּשִׁים קְטַנּוֹת", pluralLarge: "חֲבִילוֹת טוּשִׁים גְּדוֹלוֹת" },
+        { emoji: "⚽🏀", small: "כַּדּוּר קָטָן", large: "כַּדּוּר גָּדוֹל", pluralSmall: "כַּדּוּרִים קְטַנִּים", pluralLarge: "כַּדּוּרִים גְּדוֹלִים" }
+      ];
+
+      const item = pickRandom(itemsPool);
+      const priceSmall = randInt(3, 6), priceLarge = randInt(7, 10);
+      const askLarge = Math.random() > 0.5;
+      const qty = randInt(4, 8);
+      const chosenPrice = askLarge ? priceLarge : priceSmall;
+      const chosenPlural = askLarge ? item.pluralLarge : item.pluralSmall;
+      const chosenSingular = askLarge ? item.large : item.small;
+      const ans = chosenPrice * qty;
+
+      return {
+        id: 4,
+        badge: "שאלה 4 • בעיה מילולית (סינון נתונים)",
+        title: "קראו היטב את השאלה וענו:",
+        render: () => `
+          <div class="bg-sky-50 border-2 border-sky-200 rounded-2xl p-5 mb-5 flex flex-col sm:flex-row items-center gap-4">
+            <div class="text-5xl">${item.emoji}</div>
+            <p class="text-lg sm:text-xl font-medium text-slate-800 leading-relaxed">
+              ${item.small} עוֹלֶה/עוֹלָה <span class="font-bold text-sky-800">${priceSmall} שְׁקָלִים</span>, וְ${item.large} עוֹלֶה/עוֹלָה <span class="font-bold text-sky-800">${priceLarge} שְׁקָלִים</span>.
+              <br>
+              <strong class="text-indigo-900">כַּמָּה עוֹלִים ${qty} ${chosenPlural}?</strong>
+            </p>
+          </div>
+          <div class="max-w-md mx-auto bg-white p-5 rounded-2xl border-2 border-indigo-100 shadow-sm text-center">
+            <label for="q4_ans" class="block font-bold text-slate-700 mb-3 text-lg">המחיר הכולל (בשקלים):</label>
+            <div class="flex items-center justify-center gap-3">
+              <input type="number" id="q4_ans" class="w-28 h-14 text-center text-2xl font-extrabold border-2 border-indigo-300 rounded-2xl focus:border-indigo-600 focus:outline-none bg-indigo-50/30" placeholder="?">
+              <span class="text-xl font-bold text-slate-600">שקלים</span>
+            </div>
+          </div>
+        `,
+        check: () => {
+          const inp = document.getElementById('q4_ans');
+          const val = parseInt(inp.value, 10);
+          const isCorrect = (val === ans);
+          inp.classList.add(isCorrect ? 'border-emerald-500' : 'border-rose-500', isCorrect ? 'bg-emerald-50' : 'bg-rose-50');
+          return {
+            isCorrect,
+            userAnswerText: inp.value.trim() || 'ריק',
+            correctAnswerText: String(ans),
+            explanation: `מחיר יחידה אחת של ${chosenSingular} הוא ${chosenPrice} שקלים. לכן ${qty} יחידות עולות: ${qty} × ${chosenPrice} = ${ans} שקלים (המחיר השני הוא נתון מסיח).`
+          };
+        }
+      };
+    }
+
+    function generateQuestion5() {
+      const startBase = pickRandom([200, 300, 400, 500, 600, 700]);
+      const midBase = startBase + 100;
+      const endBase = startBase + 200;
+
+      const nTopLeft = startBase + randInt(12, 38);
+      const nTopRight = midBase + randInt(55, 88);
+      const nBotLeft = startBase + randInt(52, 85);
+      const nBotRight = midBase + randInt(12, 42);
+
+      const wTopLeft = numberToHebrewWords(nTopLeft);
+      const wTopRight = numberToHebrewWords(nTopRight);
+      const wBotLeft = numberToHebrewWords(nBotLeft);
+      const wBotRight = numberToHebrewWords(nBotRight);
+
+      const pct = (val) => ((val - startBase) / 200) * 100;
+
+      return {
+        id: 5,
+        badge: "שאלה 5 • ישר המספרים (מילים וספרות)",
+        title: "התבוננו בנקודות שעל ישר המספרים: כתבו במילים את המספרים שבספרות, ובספרות את המספרים שבמילים:",
+        render: () => `
+          <div class="space-y-6 select-none">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="bg-indigo-50 border-2 border-indigo-200 rounded-2xl p-3.5 text-center shadow-xs">
+                <div class="inline-block bg-indigo-600 text-white font-black text-xl px-4 py-1 rounded-xl mb-2" dir="ltr">${nTopLeft}</div>
+                <input type="text" id="q5_t1" placeholder="כתבו את המספר במילים..." class="w-full px-3 py-2 text-center font-bold border-2 border-indigo-300 rounded-xl bg-white focus:border-indigo-600 focus:outline-none">
+              </div>
+              <div class="bg-purple-50 border-2 border-purple-200 rounded-2xl p-3.5 text-center shadow-xs">
+                <div class="inline-block bg-purple-600 text-white font-black text-xl px-4 py-1 rounded-xl mb-2" dir="ltr">${nTopRight}</div>
+                <input type="text" id="q5_t2" placeholder="כתבו את המספר במילים..." class="w-full px-3 py-2 text-center font-bold border-2 border-purple-300 rounded-xl bg-white focus:border-purple-600 focus:outline-none">
+              </div>
+            </div>
+
+            <div class="bg-slate-50 border-2 border-slate-200 rounded-2xl px-6 py-8">
+              <div class="relative h-2 bg-slate-800 rounded-full" dir="ltr">
+                <div class="absolute left-0 -top-3 w-1 h-8 bg-slate-900"></div>
+                <div class="absolute left-1/2 -translate-x-1/2 -top-3 w-1 h-8 bg-slate-900"></div>
+                <div class="absolute right-0 -top-3 w-1 h-8 bg-slate-900"></div>
+
+                <div style="left: ${pct(nTopLeft)}%;" class="absolute -top-2.5 -translate-x-1/2 flex flex-col items-center">
+                  <span class="bg-indigo-600 text-white text-xs font-extrabold px-2 py-0.5 rounded-md -mt-7 shadow">${nTopLeft}</span>
+                  <div class="w-4 h-4 rounded-full bg-indigo-600 border-2 border-white shadow mt-1"></div>
+                </div>
+
+                <div style="left: ${pct(nBotLeft)}%;" class="absolute -top-1.5 -translate-x-1/2 flex flex-col items-center">
+                  <div class="w-4 h-4 rounded-full bg-emerald-600 border-2 border-white shadow"></div>
+                  <span class="bg-emerald-600 text-white text-xs font-extrabold px-2 py-0.5 rounded-md mt-1 shadow">?</span>
+                </div>
+
+                <div style="left: ${pct(nBotRight)}%;" class="absolute -top-1.5 -translate-x-1/2 flex flex-col items-center">
+                  <div class="w-4 h-4 rounded-full bg-amber-500 border-2 border-white shadow"></div>
+                  <span class="bg-amber-500 text-white text-xs font-extrabold px-2 py-0.5 rounded-md mt-1 shadow">?</span>
+                </div>
+
+                <div style="left: ${pct(nTopRight)}%;" class="absolute -top-2.5 -translate-x-1/2 flex flex-col items-center">
+                  <span class="bg-purple-600 text-white text-xs font-extrabold px-2 py-0.5 rounded-md -mt-7 shadow">${nTopRight}</span>
+                  <div class="w-4 h-4 rounded-full bg-purple-600 border-2 border-white shadow mt-1"></div>
+                </div>
+              </div>
+
+              <div class="flex justify-between text-xl font-black text-slate-800 mt-7" dir="ltr">
+                <span>${startBase}</span>
+                <span>${midBase}</span>
+                <span>${endBase}</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-3.5 text-center shadow-xs">
+                <div class="font-extrabold text-emerald-900 text-lg mb-2">🟢 ${wBotLeft}</div>
+                <input type="number" id="q5_b1" placeholder="כתבו בספרות..." class="w-32 h-11 text-center text-xl font-extrabold border-2 border-emerald-300 rounded-xl bg-white focus:border-emerald-600 focus:outline-none">
+              </div>
+              <div class="bg-amber-50 border-2 border-amber-200 rounded-2xl p-3.5 text-center shadow-xs">
+                <div class="font-extrabold text-amber-900 text-lg mb-2">🟠 ${wBotRight}</div>
+                <input type="number" id="q5_b2" placeholder="כתבו בספרות..." class="w-32 h-11 text-center text-xl font-extrabold border-2 border-amber-300 rounded-xl bg-white focus:border-amber-600 focus:outline-none">
+              </div>
+            </div>
+          </div>
+        `,
+        check: () => {
+          const t1 = document.getElementById('q5_t1');
+          const t2 = document.getElementById('q5_t2');
+          const b1 = document.getElementById('q5_b1');
+          const b2 = document.getElementById('q5_b2');
+
+          const okT1 = normalizeHebrewText(t1.value) === normalizeHebrewText(wTopLeft);
+          const okT2 = normalizeHebrewText(t2.value) === normalizeHebrewText(wTopRight);
+          const okB1 = parseInt(b1.value, 10) === nBotLeft;
+          const okB2 = parseInt(b2.value, 10) === nBotRight;
+
+          t1.classList.add(okT1 ? 'border-emerald-500' : 'border-rose-500');
+          t2.classList.add(okT2 ? 'border-emerald-500' : 'border-rose-500');
+          b1.classList.add(okB1 ? 'border-emerald-500' : 'border-rose-500');
+          b2.classList.add(okB2 ? 'border-emerald-500' : 'border-rose-500');
+
+          return {
+            isCorrect: okT1 && okT2 && okB1 && okB2,
+            userAnswerText: `${t1.value.trim() || 'ריק'} | ${t2.value.trim() || 'ריק'} | ${b1.value.trim() || 'ריק'} | ${b2.value.trim() || 'ריק'}`,
+            correctAnswerText: `${wTopLeft} | ${wTopRight} | ${nBotLeft} | ${nBotRight}`,
+            explanation: `${nTopLeft} = ${wTopLeft} | ${nTopRight} = ${wTopRight} | ${wBotLeft} = ${nBotLeft} | ${wBotRight} = ${nBotRight}.`
+          };
+        }
+      };
+    }
+
+    function generateQuestion6() {
+      const aH = randInt(1, 4), aT = randInt(1, 4), aO = randInt(1, 4);
+      const baseA = aH * 100 + aT * 10 + aO;
+      const addVal = randInt(2, 5);
+
+      const bH = randInt(5, 9), bT = randInt(5, 9), bO = randInt(5, 9);
+      const baseB = bH * 100 + bT * 10 + bO;
+      const subVal = randInt(2, 4);
+
+      const cH = randInt(3, 7), cT = randInt(3, 6), cO = randInt(3, 8);
+      const baseC = cH * 100 + cT * 10 + cO;
+      const missTens = randInt(2, 3) * 10;
+      const missHunds = randInt(1, 2) * 100;
+      const missOnes = randInt(2, 3);
+
+      const cols = [
+        {
+          title: "טור א' (חיבור)",
+          bg: "bg-blue-50/70 border-blue-200",
+          head: "text-blue-900 border-blue-200",
+          rows: [
+            { pre: `${baseA} + ${addVal} =`, post: "", ans: baseA + addVal, id: "q6_0" },
+            { pre: `${baseA} + ${addVal * 10} =`, post: "", ans: baseA + addVal * 10, id: "q6_1" },
+            { pre: `${baseA} + ${addVal * 100} =`, post: "", ans: baseA + addVal * 100, id: "q6_2" }
+          ]
+        },
+        {
+          title: "טור ב' (חיסור)",
+          bg: "bg-emerald-50/70 border-emerald-200",
+          head: "text-emerald-900 border-emerald-200",
+          rows: [
+            { pre: `${baseB} - ${subVal} =`, post: "", ans: baseB - subVal, id: "q6_3" },
+            { pre: `${baseB} - ${subVal * 10} =`, post: "", ans: baseB - subVal * 10, id: "q6_4" },
+            { pre: `${baseB} - ${subVal * 100} =`, post: "", ans: baseB - subVal * 100, id: "q6_5" }
+          ]
+        },
+        {
+          title: "טור ג' (השלמה)",
+          bg: "bg-amber-50/70 border-amber-200",
+          head: "text-amber-900 border-amber-200",
+          rows: [
+            { pre: `${baseC} +`, post: `= ${baseC + missTens}`, ans: missTens, id: "q6_6" },
+            { pre: `${baseC} -`, post: `= ${baseC - missHunds}`, ans: missHunds, id: "q6_7" },
+            { pre: `${baseC} -`, post: `= ${baseC - missOnes}`, ans: missOnes, id: "q6_8" }
+          ]
+        }
+      ];
+
+      return {
+        id: 6,
+        badge: "שאלה 6 • מבנה עשרוני",
+        title: "פתרו והשלימו את התרגילים:",
+        render: () => `
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            ${cols.map(col => `
+              <div class="${col.bg} border-2 rounded-2xl p-4 space-y-3">
+                <h3 class="font-extrabold ${col.head} text-center border-b pb-2">${col.title}</h3>
+                ${col.rows.map(r => `
+                  <div class="math-ltr justify-center text-lg font-bold text-slate-800 bg-white p-2.5 rounded-xl shadow-xs">
+                    <span>${r.pre}</span>
+                    <input type="number" id="${r.id}" data-ans="${r.ans}" class="q6-inp w-20 h-10 text-center text-lg font-extrabold border-2 border-indigo-300 rounded-lg focus:border-indigo-600 focus:outline-none" placeholder="?">
+                    ${r.post ? `<span>${r.post}</span>` : ''}
+                  </div>
+                `).join('')}
+              </div>
+            `).join('')}
+          </div>
+        `,
+        check: () => {
+          const inputs = document.querySelectorAll('.q6-inp');
+          let allCorrect = true;
+          inputs.forEach(inp => {
+            const expected = parseInt(inp.dataset.ans, 10);
+            const val = parseInt(inp.value, 10);
+            if (val === expected) {
+              inp.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-800');
+            } else {
+              allCorrect = false;
+              inp.classList.add('border-rose-500', 'bg-rose-50', 'text-rose-800');
+            }
+          });
+          return {
+            isCorrect: allCorrect,
+            userAnswerText: Array.from(inputs).map(inp => inp.value.trim() || 'ריק').join(', '),
+            correctAnswerText: `${baseA + addVal}, ${baseA + addVal * 10}, ${baseA + addVal * 100} | ${baseB - subVal}, ${baseB - subVal * 10}, ${baseB - subVal * 100} | ${missTens}, ${missHunds}, ${missOnes}`,
+            explanation: `טור א': ${baseA + addVal}, ${baseA + addVal * 10}, ${baseA + addVal * 100} | טור ב': ${baseB - subVal}, ${baseB - subVal * 10}, ${baseB - subVal * 100} | טור ג': ${missTens}, ${missHunds}, ${missOnes}.`
+          };
+        }
+      };
+    }
+
+    function generateQuestion7() {
+      const stories = [
+        {
+          emoji: "📚🏛️",
+          unit: "ספרים",
+          text: (x, y) => `לְאַחַר שֶׁשָּׁאֲלוּ מֵהַסִּפְרִיָּה <span class="font-bold text-indigo-700">${x} סְפָרִים</span>, נִשְׁאֲרוּ בָּהּ <span class="font-bold text-indigo-700">${y} סְפָרִים</span>.<br><strong class="text-indigo-900">כַּמָּה סְפָרִים הָיוּ בַּסִּפְרִיָּה בַּהַתְחָלָה?</strong>`
+        },
+        {
+          emoji: "🥐🏪",
+          unit: "מאפים",
+          text: (x, y) => `לְאַחַר שֶׁמָּכְרוּ בַּמַּאֲפִיָּה <span class="font-bold text-indigo-700">${x} מַאֲפִים</span>, נִשְׁאֲרוּ בָּהּ <span class="font-bold text-indigo-700">${y} מַאֲפִים</span>.<br><strong class="text-indigo-900">כַּמָּה מַאֲפִים הָיוּ בַּמַּאֲפִיָּה בַּהַתְחָלָה?</strong>`
+        },
+        {
+          emoji: "🚆👥",
+          unit: "נוסעים",
+          text: (x, y) => `לְאַחַר שֶׁיָּרְדוּ מֵהָרַכֶּבֶת בַּתַּחֲנָה <span class="font-bold text-indigo-700">${x} נוֹסְעִים</span>, נִשְׁאֲרוּ בָּהּ <span class="font-bold text-indigo-700">${y} נוֹסְעִים</span>.<br><strong class="text-indigo-900">כַּמָּה נוֹסְעִים הָיוּ בָּרַכֶּבֶת בַּהַתְחָלָה?</strong>`
+        },
+        {
+          emoji: "🎟️🎪",
+          unit: "כרטיסים",
+          text: (x, y) => `לְאַחַר שֶׁמָּכְרוּ בַּקּוּפָּה <span class="font-bold text-indigo-700">${x} כַּרְטִיסִים</span>, נִשְׁאֲרוּ בָּהּ <span class="font-bold text-indigo-700">${y} כַּרְטִיסִים</span>.<br><strong class="text-indigo-900">כַּמָּה כַּרְטִיסִים הָיוּ בַּקּוּפָּה בַּהַתְחָלָה?</strong>`
+        },
+        {
+          emoji: "🌳🍊",
+          unit: "תפוזים",
+          text: (x, y) => `לְאַחַר שֶׁקָּטְפוּ מֵהָעֵץ <span class="font-bold text-indigo-700">${x} תַּפּוּזִים</span>, נִשְׁאֲרוּ עָלָיו <span class="font-bold text-indigo-700">${y} תַּפּוּזִים</span>.<br><strong class="text-indigo-900">כַּמָּה תַּפּוּזִים הָיוּ עַל הָעֵץ בַּהַתְחָלָה?</strong>`
+        }
+      ];
+
+      const st = pickRandom(stories);
+      const h1 = randInt(1, 4), h2 = randInt(1, 5);
+      const t1 = randInt(1, 4), t2 = randInt(1, 5);
+      const o1 = randInt(1, 4), o2 = randInt(1, 5);
+      const x = h1 * 100 + t1 * 10 + o1;
+      const y = h2 * 100 + t2 * 10 + o2;
+      const ans = x + y;
+
+      return {
+        id: 7,
+        badge: "שאלה 7 • בעיה מילולית הפוכה",
+        title: "קראו את השאלה וענו:",
+        render: () => `
+          <div class="bg-indigo-50 border-2 border-indigo-200 rounded-2xl p-5 mb-5 flex flex-col sm:flex-row items-center gap-4">
+            <div class="text-5xl">${st.emoji}</div>
+            <p class="text-lg sm:text-xl font-medium text-slate-800 leading-relaxed">
+              ${st.text(x, y)}
+            </p>
+          </div>
+          <div class="max-w-md mx-auto bg-white p-5 rounded-2xl border-2 border-indigo-100 shadow-sm text-center">
+            <label for="q7_ans" class="block font-bold text-slate-700 mb-3 text-lg">כמה ${st.unit} היו בהתחלה?</label>
+            <div class="flex items-center justify-center gap-3">
+              <input type="number" id="q7_ans" class="w-32 h-14 text-center text-2xl font-extrabold border-2 border-indigo-300 rounded-2xl focus:border-indigo-600 focus:outline-none bg-indigo-50/30" placeholder="?">
+              <span class="text-xl font-bold text-slate-600">${st.unit}</span>
+            </div>
+          </div>
+        `,
+        check: () => {
+          const inp = document.getElementById('q7_ans');
+          const val = parseInt(inp.value, 10);
+          const isCorrect = (val === ans);
+          inp.classList.add(isCorrect ? 'border-emerald-500' : 'border-rose-500', isCorrect ? 'bg-emerald-50' : 'bg-rose-50');
+          return {
+            isCorrect,
+            userAnswerText: inp.value.trim() || 'ריק',
+            correctAnswerText: String(ans),
+            explanation: `כדי למצוא את הכמות שהייתה בהתחלה מחברים את הכמות שיצאה לכמות שנשארה: ${x} + ${y} = ${ans} ${st.unit}.`
+          };
+        }
+      };
+    }
+
+    function generateQuestion8() {
+      const configs = [
+        {
+          svg: `
+            <line x1="20" y1="90" x2="260" y2="90" stroke="#1e293b" stroke-width="3.5" stroke-linecap="round"/>
+            <line x1="150" y1="90" x2="65" y2="175" stroke="#1e293b" stroke-width="3.5" stroke-linecap="round"/>
+            <path d="M 115 90 A 35 35 0 0 1 185 90" fill="none" stroke="#ef4444" stroke-width="3"/>
+            <text x="150" y="44" text-anchor="middle" fill="#dc2626" font-size="20" font-weight="800">1</text>
+            <path d="M 180 90 A 30 30 0 0 1 129 111" fill="none" stroke="#2563eb" stroke-width="3"/>
+            <text x="172" y="138" text-anchor="middle" fill="#1d4ed8" font-size="20" font-weight="800">2</text>
+            <path d="M 110 90 A 40 40 0 0 0 122 118" fill="none" stroke="#059669" stroke-width="3"/>
+            <text x="95" y="114" text-anchor="middle" fill="#047857" font-size="20" font-weight="800">3</text>
+            <circle cx="150" cy="90" r="6" fill="#ef4444"/>
+          `,
+          answers: ["שטוחה", "קהה", "חדה"],
+          desc: "זווית 1 מונחת על קו ישר (זווית שטוחה), זווית 2 פתוחה יותר מזווית ישרה (זווית קהה), וזווית 3 סגורה יותר מזווית ישרה (זווית חדה)."
+        },
+        {
+          svg: `
+            <line x1="40" y1="130" x2="250" y2="130" stroke="#1e293b" stroke-width="3.5" stroke-linecap="round"/>
+            <line x1="140" y1="130" x2="140" y2="30" stroke="#1e293b" stroke-width="3.5" stroke-linecap="round"/>
+            <line x1="140" y1="130" x2="225" y2="60" stroke="#1e293b" stroke-width="3.5" stroke-linecap="round"/>
+            <polyline points="118,130 118,108 140,108" fill="none" stroke="#ef4444" stroke-width="3"/>
+            <text x="102" y="96" text-anchor="middle" fill="#dc2626" font-size="20" font-weight="800">1</text>
+            <path d="M 140 92 A 38 38 0 0 1 169 106" fill="none" stroke="#2563eb" stroke-width="3"/>
+            <text x="163" y="80" text-anchor="middle" fill="#1d4ed8" font-size="20" font-weight="800">2</text>
+            <path d="M 105 130 A 35 35 0 0 0 175 130" fill="none" stroke="#059669" stroke-width="3"/>
+            <text x="140" y="182" text-anchor="middle" fill="#047857" font-size="20" font-weight="800">3</text>
+            <circle cx="140" cy="130" r="6" fill="#ef4444"/>
+          `,
+          answers: ["ישרה", "חדה", "שטוחה"],
+          desc: "זווית 1 היא פינה ישרה של 90 מעלות (זווית ישרה), זווית 2 קטנה מזווית ישרה (זווית חדה), וזווית 3 מונחת על קו ישר (זווית שטוחה)."
+        },
+        {
+          svg: `
+            <line x1="30" y1="100" x2="250" y2="100" stroke="#1e293b" stroke-width="3.5" stroke-linecap="round"/>
+            <line x1="130" y1="100" x2="215" y2="35" stroke="#1e293b" stroke-width="3.5" stroke-linecap="round"/>
+            <line x1="130" y1="100" x2="130" y2="180" stroke="#1e293b" stroke-width="3.5" stroke-linecap="round"/>
+            <path d="M 95 100 A 35 35 0 0 1 158 78" fill="none" stroke="#ef4444" stroke-width="3"/>
+            <text x="108" y="56" text-anchor="middle" fill="#dc2626" font-size="20" font-weight="800">1</text>
+            <path d="M 162 76 A 40 40 0 0 1 170 100" fill="none" stroke="#2563eb" stroke-width="3"/>
+            <text x="186" y="88" text-anchor="middle" fill="#1d4ed8" font-size="20" font-weight="800">2</text>
+            <polyline points="130,122 152,122 152,100" fill="none" stroke="#059669" stroke-width="3"/>
+            <text x="168" y="144" text-anchor="middle" fill="#047857" font-size="20" font-weight="800">3</text>
+            <circle cx="130" cy="100" r="6" fill="#ef4444"/>
+          `,
+          answers: ["קהה", "חדה", "ישרה"],
+          desc: "זווית 1 גדולה מזווית ישרה (זווית קהה), זווית 2 קטנה מזווית ישרה (זווית חדה), וזווית 3 היא זווית ישרה."
+        }
+      ];
+
+      const cfg = pickRandom(configs);
+
+      return {
+        id: 8,
+        badge: "שאלה 8 • גיאומטריה - זוויות",
+        title: "התבוננו בשרטוט ובחרו מהו הסוג של כל זווית:",
+        render: () => `
+          <div class="flex flex-col md:flex-row items-center justify-center gap-6">
+            <div class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-4 flex items-center justify-center">
+              <svg width="280" height="200" viewBox="0 0 280 200" class="overflow-visible">
+                ${cfg.svg}
+              </svg>
+            </div>
+            <div class="w-full max-w-xs space-y-3">
+              ${[1, 2, 3].map((num, idx) => {
+                const styles = [
+                  "bg-red-50 border-red-200 text-red-700 border-red-300",
+                  "bg-blue-50 border-blue-200 text-blue-700 border-blue-300",
+                  "bg-emerald-50 border-emerald-200 text-emerald-700 border-emerald-300"
+                ][idx].split(" ");
+                return `
+                  <div class="${styles[0]} border ${styles[1]} p-3 rounded-2xl flex items-center justify-between gap-3">
+                    <span class="font-extrabold ${styles[2]} text-lg">זווית ${num}:</span>
+                    <select id="q8_${num}" class="font-bold text-slate-800 bg-white border-2 ${styles[3]} rounded-xl px-3 py-2 focus:outline-none">
+                      <option value="">בחרו סוג...</option>
+                      <option value="חדה">זווית חדה</option>
+                      <option value="ישרה">זווית ישרה</option>
+                      <option value="קהה">זווית קהה</option>
+                      <option value="שטוחה">זווית שטוחה</option>
+                    </select>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `,
+        check: () => {
+          let allOk = true;
+          const userChoices = [];
+          [1, 2, 3].forEach((num, idx) => {
+            const sel = document.getElementById(`q8_${num}`);
+            userChoices.push(`${num}: ${sel.value || 'לא נבחר'}`);
+            const ok = sel.value === cfg.answers[idx];
+            sel.classList.add(ok ? 'border-emerald-500' : 'border-rose-500');
+            if (!ok) allOk = false;
+          });
+          return {
+            isCorrect: allOk,
+            userAnswerText: userChoices.join(' | '),
+            correctAnswerText: `1: ${cfg.answers[0]} | 2: ${cfg.answers[1]} | 3: ${cfg.answers[2]}`,
+            explanation: cfg.desc
+          };
+        }
+      };
+    }
+
+    function generateQuestion9() {
+      const getAngleTypes = (pts) => {
+        const n = pts.length;
+        const cx = pts.reduce((s, p) => s + p.c, 0) / n;
+        const cy = pts.reduce((s, p) => s + p.r, 0) / n;
+        const ordered = [...pts].sort((a, b) => Math.atan2(a.r - cy, a.c - cx) - Math.atan2(b.r - cy, b.c - cx));
+
+        let acute = 0, right = 0, obtuse = 0, straight = 0;
+        for (let i = 0; i < n; i++) {
+          const prev = ordered[(i - 1 + n) % n];
+          const curr = ordered[i];
+          const next = ordered[(i + 1) % n];
+
+          const v1x = prev.c - curr.c, v1y = prev.r - curr.r;
+          const v2x = next.c - curr.c, v2y = next.r - curr.r;
+          const dot = v1x * v2x + v1y * v2y;
+          const cross = v1x * v2y - v1y * v2x;
+
+          if (cross === 0) straight++;
+          else if (dot === 0) right++;
+          else if (dot > 0) acute++;
+          else obtuse++;
+        }
+        return { acute, right, obtuse, straight, ordered };
+      };
+
+      const tasks = [
+        {
+          vertices: 3,
+          prompt: "מְשֻׁלָּשׁ שֶׁיֵּשׁ בּוֹ רַק שְׁתֵּי זָוִיוֹת חַדּוֹת (כלומר: משולש ישר-זווית או קהה-זווית)",
+          validate: (pts) => {
+            if (pts.length !== 3) return false;
+            const info = getAngleTypes(pts);
+            return info.straight === 0 && info.acute === 2;
+          },
+          hint: "משולש שיש בו רק שתי זוויות חדות הוא משולש שהזווית השלישית שלו היא ישרה (90°) או קהה (גדולה מ-90°)."
+        },
+        {
+          vertices: 3,
+          prompt: "מְשֻׁלָּשׁ יְשַׁר-זָוִית (משולש שיש בו זווית ישרה אחת)",
+          validate: (pts) => {
+            if (pts.length !== 3) return false;
+            const info = getAngleTypes(pts);
+            return info.straight === 0 && info.right === 1;
+          },
+          hint: "כדי ליצור זווית ישרה ברשת, חברו שתי צלעות מאונכות זו לזו (למשל אחת ימינה ואחת למטה) וסגרו למשולש."
+        },
+        {
+          vertices: 3,
+          prompt: "מְשֻׁלָּשׁ קֵהֵה-זָוִית (משולש שיש בו זווית קהה אחת)",
+          validate: (pts) => {
+            if (pts.length !== 3) return false;
+            const info = getAngleTypes(pts);
+            return info.straight === 0 && info.obtuse === 1;
+          },
+          hint: "כדי ליצור זווית קהה, פתחו את אחת הפינות של המשולש כך שתהיה רחבה יותר מפינה של ריבוע."
+        },
+        {
+          vertices: 4,
+          prompt: "מְרֻבָּע שֶׁיֵּשׁ בּוֹ שְׁתֵּי זָוִיוֹת קֵהוֹת (למשל מקבילית או טרפז שווה-שוקיים)",
+          validate: (pts) => {
+            if (pts.length !== 4) return false;
+            const info = getAngleTypes(pts);
+            return info.straight === 0 && info.obtuse === 2;
+          },
+          hint: "מרובע עם שתי זוויות קהות (ושתי זוויות חדות) יכול להיות מקבילית נטויה או טרפז."
+        },
+        {
+          vertices: 4,
+          prompt: "מַלְבֵּן שֶׁאֵינוֹ רִבּוּעַ (מרובע עם 4 זוויות ישרות וצלעות סמוכות באורך שונה)",
+          validate: (pts) => {
+            if (pts.length !== 4) return false;
+            const info = getAngleTypes(pts);
+            if (info.straight !== 0 || info.right !== 4) return false;
+            const o = info.ordered;
+            const d1 = (o[0].c - o[1].c) ** 2 + (o[0].r - o[1].r) ** 2;
+            const d2 = (o[1].c - o[2].c) ** 2 + (o[1].r - o[2].r) ** 2;
+            return d1 !== d2;
+          },
+          hint: "מלבן שאינו ריבוע הוא מרובע בעל 4 זוויות ישרות שאורכו שונה מרוחבו (למשל 4 משבצות לרוחב ו-2 לגובה)."
+        }
+      ];
+
+      const task = pickRandom(tasks);
+
+      return {
+        id: 9,
+        badge: "שאלה 9 • גיאומטריה - סרטוט מצולעים",
+        title: "סרטטו את המצולע המבוקש כך שהקודקודים יהיו על נקודות הרשת:",
+        render: () => {
+          gridPolygonState = { points: [], targetVertices: task.vertices };
+          let dotsHtml = '';
+          for (let r = 0; r < 6; r++) {
+            for (let c = 0; c < 6; c++) {
+              const cx = 30 + c * 46;
+              const cy = 30 + r * 46;
+              dotsHtml += `<circle cx="${cx}" cy="${cy}" r="6" fill="#64748b" class="grid-dot" onclick="toggleGridPoint(${c}, ${r})"/>`;
+            }
+          }
+
+          return `
+            <div class="flex flex-col items-center">
+              <div class="bg-indigo-50 border-2 border-indigo-200 rounded-2xl px-5 py-3 mb-4 text-center">
+                <span class="text-sm font-bold text-indigo-600 block mb-0.5">המשימה שלך:</span>
+                <strong class="text-lg sm:text-xl text-indigo-950">${task.prompt}</strong>
+              </div>
+
+              <div class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-3 shadow-inner">
+                <svg id="polygon-svg" width="290" height="290" viewBox="0 0 290 290">
+                  <polygon id="drawn-poly" points="" fill="rgba(79, 70, 229, 0.22)" stroke="#4f46e5" stroke-width="3.5" stroke-linejoin="round"/>
+                  <g id="grid-dots-layer">${dotsHtml}</g>
+                  <g id="selected-vertices-layer"></g>
+                </svg>
+              </div>
+
+              <div class="flex items-center gap-4 mt-3">
+                <span id="poly-status" class="text-sm font-bold text-indigo-800 bg-indigo-50 px-3 py-1.5 rounded-xl">נבחרו 0 מתוך ${task.vertices} קודקודים</span>
+                <button type="button" onclick="clearGridPolygon()" class="bg-rose-100 hover:bg-rose-200 text-rose-800 font-bold text-sm px-4 py-1.5 rounded-xl transition-colors cursor-pointer">
+                  נקה לוח 🗑️
+                </button>
+              </div>
+            </div>
+          `;
+        },
+        check: () => {
+          const isOk = task.validate(gridPolygonState.points);
+          return {
+            isCorrect: isOk,
+            userAnswerText: `נבחרו ${gridPolygonState.points.length} קודקודים`,
+            correctAnswerText: task.prompt,
+            explanation: isOk ? `כל הכבוד! סרטטתם במדויק ${task.prompt}.` : task.hint
+          };
+        }
+      };
+    }
+
+    function generateQuestion10() {
+      const minuteOptions = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55];
+      const usedHours = shuffleArray([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]).slice(0, 3);
+      const chosenMinutes = shuffleArray(minuteOptions).slice(0, 3);
+
+      const clocks = [
+        { label: "א.", h: usedHours[0], m: chosenMinutes[0], id: "q10_0" },
+        { label: "ב.", h: usedHours[1], m: chosenMinutes[1], id: "q10_1" },
+        { label: "ג.", h: usedHours[2], m: chosenMinutes[2], id: "q10_2" }
+      ];
+
+      const fmt2 = (n) => String(n).padStart(2, '0');
+
+      return {
+        id: 10,
+        badge: "שאלה 10 • קריאת שעון",
+        title: "התבוננו במחוגי השעון וכתבו את השעה המתאימה בשעון הדיגיטלי:",
+        render: () => `
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            ${clocks.map(c => `
+              <div class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-4 flex flex-col items-center">
+                <span class="self-start font-extrabold text-indigo-700 text-lg mb-1">${c.label}</span>
+                ${buildAnalogClockSVG(c.h, c.m)}
+                <div class="math-ltr mt-4 bg-slate-900 text-emerald-400 px-4 py-2.5 rounded-2xl shadow-inner border-2 border-slate-700">
+                  <input type="number" id="${c.id}_h" min="0" max="23" placeholder="שעה" class="w-14 h-10 bg-slate-800 text-white text-center text-xl font-extrabold rounded-lg border border-slate-600 focus:border-emerald-400 focus:outline-none">
+                  <span class="text-2xl font-black text-white">:</span>
+                  <input type="number" id="${c.id}_m" min="0" max="59" placeholder="דק'" class="w-14 h-10 bg-slate-800 text-white text-center text-xl font-extrabold rounded-lg border border-slate-600 focus:border-emerald-400 focus:outline-none">
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `,
+        check: () => {
+          let allCorrect = true;
+          const userTimes = [];
+          clocks.forEach((item, idx) => {
+            const hInp = document.getElementById(`${item.id}_h`);
+            const mInp = document.getElementById(`${item.id}_m`);
+            const hRaw = hInp.value.trim();
+            const mRaw = mInp.value.trim();
+            userTimes.push(`${['א', 'ב', 'ג'][idx]}: ${hRaw || '--'}:${mRaw ? mRaw.padStart(2, '0') : '--'}`);
+            const hVal = parseInt(hRaw, 10);
+            const mVal = parseInt(mRaw, 10);
+
+            const altHour = item.h === 12 ? 0 : item.h + 12;
+            const hOk = (hVal === item.h || hVal === altHour);
+            const mOk = (mVal === item.m);
+
+            hInp.classList.add(hOk ? 'border-emerald-400' : 'border-rose-500');
+            mInp.classList.add(mOk ? 'border-emerald-400' : 'border-rose-500');
+            if (!hOk || !mOk) allCorrect = false;
+          });
+
+          return {
+            isCorrect: allCorrect,
+            userAnswerText: userTimes.join(' | '),
+            correctAnswerText: `א: ${fmt2(clocks[0].h)}:${fmt2(clocks[0].m)} | ב: ${fmt2(clocks[1].h)}:${fmt2(clocks[1].m)} | ג: ${fmt2(clocks[2].h)}:${fmt2(clocks[2].m)}`,
+            explanation: `השעות הנכונות הן: א) ${fmt2(clocks[0].h)}:${fmt2(clocks[0].m)} | ב) ${fmt2(clocks[1].h)}:${fmt2(clocks[1].m)} | ג) ${fmt2(clocks[2].h)}:${fmt2(clocks[2].m)}.`
+          };
+        }
+      };
+    }
+
+    function buildNewQuestionSet() {
+      let generated;
+      let sig = "";
+      let attempts = 0;
+      do {
+        generated = [
+          generateQuestion1(),
+          generateQuestion2(),
+          generateQuestion3(),
+          generateQuestion4(),
+          generateQuestion5(),
+          generateQuestion6(),
+          generateQuestion7(),
+          generateQuestion8(),
+          generateQuestion9(),
+          generateQuestion10()
+        ];
+        sig = generated.map(q => q.title).join("|");
+        attempts++;
+      } while (sig === lastSeedSignature && attempts < 3);
+
+      lastSeedSignature = sig;
+      questions = generated;
+    }
+
+    function toggleGridPoint(c, r) {
+      if (hasCheckedCurrent) return;
+      const idx = gridPolygonState.points.findIndex(p => p.c === c && p.r === r);
+      if (idx > -1) {
+        gridPolygonState.points.splice(idx, 1);
+      } else {
+        if (gridPolygonState.points.length >= gridPolygonState.targetVertices) {
+          gridPolygonState.points.shift();
+        }
+        gridPolygonState.points.push({ c, r });
+      }
+      updateGridPolygonSVG();
+    }
+
+    function clearGridPolygon() {
+      if (hasCheckedCurrent) return;
+      gridPolygonState.points = [];
+      updateGridPolygonSVG();
+    }
+
+    function updateGridPolygonSVG() {
+      const poly = document.getElementById('drawn-poly');
+      const vLayer = document.getElementById('selected-vertices-layer');
+      const status = document.getElementById('poly-status');
+      if (!poly || !vLayer) return;
+
+      const pts = gridPolygonState.points;
+      let orderedPts = pts;
+      if (pts.length >= 3) {
+        const cx = pts.reduce((s, p) => s + p.c, 0) / pts.length;
+        const cy = pts.reduce((s, p) => s + p.r, 0) / pts.length;
+        orderedPts = [...pts].sort((a, b) => Math.atan2(a.r - cy, a.c - cx) - Math.atan2(b.r - cy, b.c - cx));
+      }
+
+      const coords = orderedPts.map(p => ({
+        x: 30 + p.c * 46,
+        y: 30 + p.r * 46
+      }));
+
+      poly.setAttribute('points', coords.map(pt => `${pt.x},${pt.y}`).join(' '));
+      vLayer.innerHTML = coords.map(pt => `
+        <circle cx="${pt.x}" cy="${pt.y}" r="8" fill="#4f46e5" stroke="#ffffff" stroke-width="2.5"/>
+      `).join('');
+
+      if (status) {
+        status.textContent = `נבחרו ${pts.length} מתוך ${gridPolygonState.targetVertices} קודקודים`;
+      }
+    }
+
+    function buildAnalogClockSVG(hours, minutes) {
+      const minAngle = minutes * 6;
+      const hourAngle = ((hours % 12) + minutes / 60) * 30;
+
+      let numbersHtml = '';
+      let ticksHtml = '';
+      for (let i = 1; i <= 12; i++) {
+        const ang = (i * 30 - 90) * (Math.PI / 180);
+        const nx = 90 + 62 * Math.cos(ang);
+        const ny = 90 + 62 * Math.sin(ang) + 5;
+        numbersHtml += `<text x="${nx}" y="${ny}" text-anchor="middle" font-size="14" font-weight="800" fill="#1e293b">${i}</text>`;
+      }
+      for (let m = 0; m < 60; m++) {
+        const ang = (m * 6 - 90) * (Math.PI / 180);
+        const r1 = m % 5 === 0 ? 74 : 77;
+        const r2 = 82;
+        const x1 = 90 + r1 * Math.cos(ang);
+        const y1 = 90 + r1 * Math.sin(ang);
+        const x2 = 90 + r2 * Math.cos(ang);
+        const y2 = 90 + r2 * Math.sin(ang);
+        ticksHtml += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#475569" stroke-width="${m % 5 === 0 ? 2.5 : 1}"/>`;
+      }
+
+      return `
+        <svg width="180" height="180" viewBox="0 0 180 180">
+          <circle cx="90" cy="90" r="84" fill="#ffffff" stroke="#10b981" stroke-width="5"/>
+          ${ticksHtml}
+          ${numbersHtml}
+          <line x1="90" y1="90" x2="90" y2="46" stroke="#3b82f6" stroke-width="5.5" stroke-linecap="round" transform="rotate(${hourAngle} 90 90)"/>
+          <line x1="90" y1="90" x2="90" y2="24" stroke="#f97316" stroke-width="3.5" stroke-linecap="round" transform="rotate(${minAngle} 90 90)"/>
+          <circle cx="90" cy="90" r="5" fill="#1e293b"/>
+        </svg>
+      `;
+    }
+
+    function startGame() {
+      const nameInput = document.getElementById('player-name');
+      if (nameInput && nameInput.value.trim()) {
+        playerName = nameInput.value.trim();
+      }
+
+      buildNewQuestionSet();
+      currentQuestionIndex = 0;
+      score = 0;
+      questionResults = new Array(questions.length).fill('skipped');
+      questionLogs = new Array(questions.length).fill(null);
+      currentSavedDocId = null;
+      selectedMoodLabel = "לא סומן";
+
+      const startScreen = document.getElementById('start-screen');
+      const summaryScreen = document.getElementById('summary-screen');
+      const gameHeader = document.getElementById('game-header');
+      const questionContainer = document.getElementById('question-container');
+
+      if (startScreen) startScreen.classList.add('hidden');
+      if (summaryScreen) summaryScreen.classList.add('hidden');
+      if (gameHeader) gameHeader.classList.remove('hidden');
+      if (questionContainer) questionContainer.classList.remove('hidden');
+
+      const playerBadge = document.getElementById('header-player-badge');
+      if (playerBadge) {
+        if (playerName) {
+          playerBadge.textContent = `👤 ${playerName}`;
+          playerBadge.classList.remove('hidden');
+        } else {
+          playerBadge.classList.add('hidden');
+        }
+      }
+
+      updateHeader();
+      renderCurrentQuestion();
+    }
+
+    function updateHeader() {
+      const qNumEl = document.getElementById('current-q-num');
+      const scoreEl = document.getElementById('score-display');
+      const barEl = document.getElementById('progress-bar');
+
+      if (qNumEl) qNumEl.textContent = String(currentQuestionIndex + 1);
+      if (scoreEl) scoreEl.textContent = String(score);
+      if (barEl) barEl.style.width = `${((currentQuestionIndex + 1) / questions.length) * 100}%`;
+    }
+
+    function renderCurrentQuestion() {
+      hasCheckedCurrent = false;
+      const q = questions[currentQuestionIndex];
+      if (!q) return;
+
+      document.getElementById('q-badge').textContent = q.badge;
+      document.getElementById('q-title').textContent = q.title;
+      document.getElementById('q-body').innerHTML = q.render();
+
+      const feedbackBox = document.getElementById('feedback-box');
+      const checkBtn = document.getElementById('check-btn');
+      const nextBtn = document.getElementById('next-btn');
+      const skipBtn = document.getElementById('skip-btn');
+
+      feedbackBox.classList.add('hidden');
+      checkBtn.classList.remove('hidden');
+      nextBtn.classList.add('hidden');
+      skipBtn.classList.remove('hidden');
+      nextBtn.textContent = currentQuestionIndex === questions.length - 1 ? "למסך הסיכום 🏁" : "לשאלה הבאה ⬅️";
+    }
+
+    function checkCurrentQuestion() {
+      if (hasCheckedCurrent) return;
+      hasCheckedCurrent = true;
+
+      const q = questions[currentQuestionIndex];
+      const result = q.check();
+
+      document.querySelectorAll('#q-body input, #q-body select').forEach(el => {
+        el.disabled = true;
+      });
+
+      const feedbackBox = document.getElementById('feedback-box');
+      const feedbackIcon = document.getElementById('feedback-icon');
+      const feedbackHeading = document.getElementById('feedback-heading');
+      const feedbackExplanation = document.getElementById('feedback-explanation');
+
+      feedbackBox.classList.remove('hidden', 'bg-emerald-50', 'border-emerald-300', 'bg-rose-50', 'border-rose-300');
+
+      if (result.isCorrect) {
+        score += 10;
+        questionResults[currentQuestionIndex] = 'correct';
+        feedbackBox.classList.add('bg-emerald-50', 'border-emerald-300');
+        feedbackIcon.textContent = '🌟';
+        feedbackHeading.textContent = 'כל הכבוד! תשובה נכונה (+10 נקודות)';
+        feedbackHeading.className = 'font-black text-lg mb-1 text-emerald-900';
+      } else {
+        questionResults[currentQuestionIndex] = 'wrong';
+        feedbackBox.classList.add('bg-rose-50', 'border-rose-300');
+        feedbackIcon.textContent = '💡';
+        feedbackHeading.textContent = 'לא נורא! הנה ההסבר — ואפשר להמשיך הלאה:';
+        feedbackHeading.className = 'font-black text-lg mb-1 text-rose-900';
+      }
+
+      questionLogs[currentQuestionIndex] = {
+        questionNum: currentQuestionIndex + 1,
+        topic: q.badge,
+        questionTitle: q.title,
+        status: result.isCorrect ? 'נכון' : 'טעות',
+        userAnswer: result.userAnswerText || '',
+        correctAnswer: result.correctAnswerText || '',
+        explanation: result.explanation
+      };
+
+      feedbackExplanation.textContent = result.explanation;
+      updateHeader();
+
+      document.getElementById('check-btn').classList.add('hidden');
+      document.getElementById('skip-btn').classList.add('hidden');
+      document.getElementById('next-btn').classList.remove('hidden');
+    }
+
+    function nextQuestion(isSkipped) {
+      if (isSkipped && !hasCheckedCurrent) {
+        questionResults[currentQuestionIndex] = 'skipped';
+        const q = questions[currentQuestionIndex];
+        questionLogs[currentQuestionIndex] = {
+          questionNum: currentQuestionIndex + 1,
+          topic: q ? q.badge : `שאלה ${currentQuestionIndex + 1}`,
+          questionTitle: q ? q.title : '',
+          status: 'דילוג',
+          userAnswer: 'דילג/ה על השאלה',
+          correctAnswer: '',
+          explanation: ''
+        };
+      }
+
+      if (currentQuestionIndex < questions.length - 1) {
+        currentQuestionIndex++;
+        updateHeader();
+        renderCurrentQuestion();
+      } else {
+        showSummaryScreen();
+      }
+    }
+
+    async function showSummaryScreen() {
+      document.getElementById('game-header').classList.add('hidden');
+      document.getElementById('question-container').classList.add('hidden');
+      document.getElementById('summary-screen').classList.remove('hidden');
+
+      const copyToast = document.getElementById('copy-toast');
+      if (copyToast) copyToast.classList.add('hidden');
+
+      const namePrefix = playerName ? `${playerName}, ` : '';
+      const trophyEl = document.getElementById('summary-trophy');
+      const titleEl = document.getElementById('summary-title');
+      const subtitleEl = document.getElementById('summary-subtitle');
+
+      if (score >= 80) {
+        trophyEl.textContent = '🏆';
+        titleEl.textContent = `${namePrefix}אלופים אמיתיים!`;
+        subtitleEl.textContent = 'שליטה מדהימה בכל נושאי החשבון וההנדסה של כיתה ג\'!';
+      } else if (score >= 50) {
+        trophyEl.textContent = '🌟';
+        titleEl.textContent = `${namePrefix}כל הכבוד על המאמץ!`;
+        subtitleEl.textContent = 'עבודה יפה! עוד סיבוב תרגול אחד ותגיעו לפסגה.';
+      } else {
+        trophyEl.textContent = '💪';
+        titleEl.textContent = `${namePrefix}יופי שסיימתם את כל התחנות!`;
+        subtitleEl.textContent = 'כל טעות היא הזדמנות ללמוד. נסו עכשיו סט שאלות חדש!';
+      }
+
+      document.getElementById('final-score').textContent = `${score} / 100`;
+
+      const breakdownEl = document.getElementById('results-breakdown');
+      breakdownEl.innerHTML = questionResults.map((res, idx) => {
+        if (res === 'correct') {
+          return `<div class="bg-emerald-100 border border-emerald-300 text-emerald-900 rounded-xl py-2 font-extrabold text-sm"><div>${idx + 1}</div><div>✔️</div></div>`;
+        } else if (res === 'wrong') {
+          return `<div class="bg-rose-100 border border-rose-300 text-rose-900 rounded-xl py-2 font-extrabold text-sm"><div>${idx + 1}</div><div>❌</div></div>`;
+        }
+        return `<div class="bg-slate-100 border border-slate-300 text-slate-600 rounded-xl py-2 font-extrabold text-sm"><div>${idx + 1}</div><div>⏭️</div></div>`;
+      }).join('');
+
+      const nowStr = new Date().toLocaleString('he-IL', {
+        day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+      });
+      const finalizedLogs = questionResults.map((res, idx) => {
+        if (questionLogs[idx]) return questionLogs[idx];
+        return {
+          questionNum: idx + 1,
+          topic: questions[idx]?.badge || `שאלה ${idx + 1}`,
+          questionTitle: questions[idx]?.title || '',
+          status: res === 'correct' ? 'נכון' : (res === 'wrong' ? 'טעות' : 'דילוג'),
+          userAnswer: res === 'skipped' ? 'דילג/ה על השאלה' : '',
+          correctAnswer: ''
+        };
+      });
+
+      if (typeof window.saveAttemptToCloud === 'function') {
+        currentSavedDocId = await window.saveAttemptToCloud({
+          studentName: playerName || "תלמיד/ה ללא שם",
+          score,
+          dateStr: nowStr,
+          results: questionResults,
+          logs: finalizedLogs,
+          mood: selectedMoodLabel
+        });
+      }
+    }
+
+    function selectMood(btn, moodLabel, message) {
+      document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('ring-4', 'ring-amber-400', 'bg-amber-100'));
+      btn.classList.add('ring-4', 'ring-amber-400', 'bg-amber-100');
+      selectedMoodLabel = moodLabel;
+      const resp = document.getElementById('mood-response');
+      resp.textContent = message;
+      resp.classList.remove('hidden');
+
+      if (currentSavedDocId && typeof window.updateAttemptMoodInCloud === 'function') {
+        window.updateAttemptMoodInCloud(currentSavedDocId, moodLabel);
+      }
+    }
+
+    function copyTextToClipboard(text) {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      try {
+        document.execCommand('copy');
+      } catch (e) {}
+      document.body.removeChild(textarea);
+    }
+
+    function copyCurrentSummary() {
+      const nameStr = playerName || "תלמיד/ה";
+      const lines = questionResults.map((res, idx) => {
+        const icon = res === 'correct' ? '✅' : (res === 'wrong' ? '❌' : '⏭️');
+        const label = questions[idx] ? questions[idx].badge : `שאלה ${idx + 1}`;
+        return `${icon} ${label}`;
+      });
+
+      const summaryText = [
+        `📊 סיכום תרגול בחשבון - כיתה ג'`,
+        `👤 שם התלמיד/ה: ${nameStr}`,
+        `🏆 ציון סופי: ${score} מתוך 100`,
+        `😊 תחושה בסיום: ${selectedMoodLabel}`,
+        `-------------------------`,
+        ...lines
+      ].join('\n');
+
+      copyTextToClipboard(summaryText);
+      const toast = document.getElementById('copy-toast');
+      if (toast) toast.classList.remove('hidden');
+    }
+
+    function openResultsModal() {
+      const modal = document.getElementById('results-modal');
+      if (modal) modal.classList.remove('hidden');
+      const toast = document.getElementById('modal-copy-toast');
+      if (toast) toast.classList.add('hidden');
+      if (typeof window.getSavedAttemptsCache === 'function') {
+        window.renderSavedResultsList(window.getSavedAttemptsCache());
+      }
+    }
+
+    function closeResultsModal() {
+      const modal = document.getElementById('results-modal');
+      if (modal) modal.classList.add('hidden');
+      const authBox = document.getElementById('teacher-auth-box');
+      if (authBox) authBox.classList.add('hidden');
+      const changeBox = document.getElementById('change-pin-box');
+      if (changeBox) changeBox.classList.add('hidden');
+    }
+
+    function toggleTeacherAuthBox() {
+      if (isTeacherUnlocked) {
+        logoutTeacherMode();
+        return;
+      }
+      const authBox = document.getElementById('teacher-auth-box');
+      const pinInput = document.getElementById('teacher-pin-input');
+      const errEl = document.getElementById('teacher-pin-error');
+      if (errEl) errEl.classList.add('hidden');
+      if (authBox) {
+        authBox.classList.toggle('hidden');
+        if (!authBox.classList.contains('hidden') && pinInput) {
+          pinInput.value = '';
+          pinInput.focus();
+        }
+      }
+    }
+
+    function verifyTeacherPin() {
+      const pinInput = document.getElementById('teacher-pin-input');
+      const errEl = document.getElementById('teacher-pin-error');
+      if (!pinInput) return;
+
+      if (pinInput.value.trim() === teacherPinCode) {
+        isTeacherUnlocked = true;
+        if (errEl) errEl.classList.add('hidden');
+        document.getElementById('teacher-auth-box').classList.add('hidden');
+        document.getElementById('teacher-admin-bar').classList.remove('hidden');
+        document.getElementById('teacher-toggle-btn').classList.add('hidden');
+        document.getElementById('modal-subtitle').textContent = 'מצב מורה: מוצג ניקוד יחד עם פירוט השאלות והטעויות';
+        if (typeof window.getSavedAttemptsCache === 'function') {
+          window.renderSavedResultsList(window.getSavedAttemptsCache());
+        }
+      } else {
+        if (errEl) errEl.classList.remove('hidden');
+      }
+    }
+
+    function logoutTeacherMode() {
+      isTeacherUnlocked = false;
+      expandedStudentAttemptIds.clear();
+      pendingDeleteAttemptId = null;
+      document.getElementById('teacher-admin-bar').classList.add('hidden');
+      document.getElementById('change-pin-box').classList.add('hidden');
+      document.getElementById('delete-all-confirm-box').classList.add('hidden');
+      document.getElementById('teacher-toggle-btn').classList.remove('hidden');
+      document.getElementById('modal-subtitle').textContent = 'מציג את מספר הנקודות של כל משתתף';
+      if (typeof window.getSavedAttemptsCache === 'function') {
+        window.renderSavedResultsList(window.getSavedAttemptsCache());
+      }
+    }
+
+    function toggleStudentDetails(docId) {
+      if (expandedStudentAttemptIds.has(docId)) {
+        expandedStudentAttemptIds.delete(docId);
+      } else {
+        expandedStudentAttemptIds.add(docId);
+      }
+      if (typeof window.getSavedAttemptsCache === 'function') {
+        window.renderSavedResultsList(window.getSavedAttemptsCache());
+      }
+    }
+
+    function requestDeleteAttempt(docId) {
+      pendingDeleteAttemptId = docId;
+      if (typeof window.getSavedAttemptsCache === 'function') {
+        window.renderSavedResultsList(window.getSavedAttemptsCache());
+      }
+    }
+
+    function cancelDeleteAttempt() {
+      pendingDeleteAttemptId = null;
+      if (typeof window.getSavedAttemptsCache === 'function') {
+        window.renderSavedResultsList(window.getSavedAttemptsCache());
+      }
+    }
+
+    async function confirmDeleteAttempt(docId) {
+      pendingDeleteAttemptId = null;
+      expandedStudentAttemptIds.delete(docId);
+      if (typeof window.deleteAttemptFromCloud === 'function') {
+        await window.deleteAttemptFromCloud(docId);
+      }
+    }
+
+    function askDeleteAllResults() {
+      const box = document.getElementById('delete-all-confirm-box');
+      if (box) box.classList.remove('hidden');
+    }
+
+    function cancelDeleteAllResults() {
+      const box = document.getElementById('delete-all-confirm-box');
+      if (box) box.classList.add('hidden');
+    }
+
+    async function confirmDeleteAllResults() {
+      cancelDeleteAllResults();
+      expandedStudentAttemptIds.clear();
+      pendingDeleteAttemptId = null;
+      if (typeof window.deleteAllAttemptsFromCloud === 'function') {
+        await window.deleteAllAttemptsFromCloud();
+      }
+    }
+
+    function toggleChangePinBox() {
+      const box = document.getElementById('change-pin-box');
+      if (box) box.classList.toggle('hidden');
+    }
+
+    function saveNewTeacherPin() {
+      const inp = document.getElementById('new-teacher-pin');
+      if (inp && inp.value.trim()) {
+        teacherPinCode = inp.value.trim();
+        document.getElementById('change-pin-box').classList.add('hidden');
+      }
+    }
+
+    window.renderSavedResultsList = function(items) {
+      const container = document.getElementById('saved-results-list');
+      if (!container) return;
+      if (!items || items.length === 0) {
+        container.innerHTML = '<p class="text-center text-slate-500 font-bold py-8">אין עדיין תוצאות שמורות.</p>';
+        return;
+      }
+
+      container.innerHTML = items.map(item => {
+        const isExpanded = expandedStudentAttemptIds.has(item.id);
+        const isPendingDel = pendingDeleteAttemptId === item.id;
+        const logsHtml = (isTeacherUnlocked && isExpanded && Array.isArray(item.logs))
+          ? `<div class="mt-3 pt-3 border-t border-slate-200 space-y-2 text-xs">
+              ${item.logs.map(l => `
+                <div class="p-2 rounded-xl ${l.status === 'נכון' ? 'bg-emerald-50 text-emerald-900' : (l.status === 'טעות' ? 'bg-rose-50 text-rose-900' : 'bg-slate-100 text-slate-700')}">
+                  <div class="font-extrabold">${l.topic} — ${l.status}</div>
+                  <div>תשובת תלמיד/ה: ${l.userAnswer || '-'} | תשובה נכונה: ${l.correctAnswer || '-'}</div>
+                </div>
+              `).join('')}
+            </div>`
+          : '';
+
+        const teacherBtns = isTeacherUnlocked
+          ? `<div class="flex items-center gap-2 mt-2">
+              <button type="button" onclick="toggleStudentDetails('${item.id}')" class="bg-indigo-100 hover:bg-indigo-200 text-indigo-900 font-bold px-3 py-1 rounded-lg text-xs cursor-pointer">
+                ${isExpanded ? 'הסתר פירוט ▲' : 'פירוט שאלות ▼'}
+              </button>
+              ${isPendingDel
+                ? `<button type="button" onclick="confirmDeleteAttempt('${item.id}')" class="bg-rose-600 text-white font-bold px-3 py-1 rounded-lg text-xs cursor-pointer">אישור מחיקה</button>
+                   <button type="button" onclick="cancelDeleteAttempt()" class="bg-slate-200 text-slate-800 font-bold px-2.5 py-1 rounded-lg text-xs cursor-pointer">ביטול</button>`
+                : `<button type="button" onclick="requestDeleteAttempt('${item.id}')" class="bg-rose-100 hover:bg-rose-200 text-rose-800 font-bold px-2.5 py-1 rounded-lg text-xs cursor-pointer">🗑️ מחק</button>`
+              }
+            </div>`
+          : '';
+
+        return `
+          <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <div class="font-extrabold text-slate-900 text-base">${item.studentName || 'תלמיד/ה'}</div>
+                <div class="text-xs text-slate-500">${item.dateStr || ''} • תחושה: ${item.mood || 'לא סומן'}</div>
+              </div>
+              <div class="bg-indigo-100 text-indigo-900 font-black px-4 py-1.5 rounded-xl text-lg">
+                ${item.score ?? 0} / 100
+              </div>
+            </div>
+            ${teacherBtns}
+            ${logsHtml}
+          </div>
+        `;
+      }).join('');
+    };
+
+    function copyAllResultsReport() {
+      const items = typeof window.getSavedAttemptsCache === 'function' ? window.getSavedAttemptsCache() : [];
+      const lines = items.map((it, i) => `${i + 1}. ${it.studentName} - ציון: ${it.score}/100 (${it.dateStr || ''})`);
+      copyTextToClipboard(['📊 דוח תוצאות חשבון - כיתה ג\'', ...lines].join('\n'));
+      const toast = document.getElementById('modal-copy-toast');
+      if (toast) toast.classList.remove('hidden');
+    }
+
+    function exportResultsToExcel() {
+      const items = typeof window.getSavedAttemptsCache === 'function' ? window.getSavedAttemptsCache() : [];
+      const rows = [['שם התלמיד/ה', 'ציון', 'תאריך', 'תחושה']];
+      items.forEach(it => rows.push([it.studentName || '', it.score ?? 0, it.dateStr || '', it.mood || '']));
+      const csv = '\uFEFF' + rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'תוצאות_חשבון_כיתה_ג.csv';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function regenerateAndRestart() {
+      startGame();
+    }
+  <\/script>
+</body>
+</html></script>
+
+<!-- תבנית למשחקי תרגול מהירים מובנים ברמת כיתה ג׳ (כולל תרגילים ושאלות מילוליות בכל קטגוריה) -->
+<script type="text/plain" id="tpl-mini-games-g3"><!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body { font-family: 'Rubik', 'Segoe UI', Arial, sans-serif; background: linear-gradient(135deg, #e0f2fe 0%, #fef9c3 100%); display:flex; align-items:center; justify-content:center; min-height:100vh; margin:0; padding:16px; }
+  .box { background:#fff; border:4px solid #38bdf8; border-radius:28px; padding:24px; max-width:560px; width:100%; text-align:center; box-shadow:0 12px 28px rgba(0,0,0,0.09); }
+  .top-bar { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:10px; }
+  .score { font-weight:800; color:#059669; font-size:1.05rem; background:#ecfdf5; border:2px solid #6ee7b7; padding:5px 12px; border-radius:999px; }
+  .type-pill { font-weight:800; font-size:0.9rem; padding:5px 12px; border-radius:999px; }
+  .pill-ex { background:#e0e7ff; color:#3730a3; border:2px solid #a5b4fc; }
+  .pill-word { background:#fef3c7; color:#92400e; border:2px solid #fcd34d; }
+  h2 { color:#0c4a6e; font-size:1.5rem; margin:6px 0; }
+  .q { font-size:1.75rem; font-weight:800; background:#f8fafc; border:3px solid #cbd5e1; border-radius:20px; padding:18px; margin:14px 0; direction:ltr; line-height:1.5; }
+  .q.rtl { direction:rtl; font-size:1.25rem; background:#fffbeb; border-color:#fde68a; text-align:right; }
+  .opts { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  button { padding:14px 10px; font-size:1.15rem; font-weight:800; border-radius:16px; border:3px solid #bae6fd; background:#fff; color:#0f172a; cursor:pointer; font-family:inherit; transition:transform 0.1s, background 0.15s; }
+  button:hover { background:#e0f2fe; }
+  button:active { transform:translateY(2px); }
+  button:disabled { cursor:default; opacity:0.85; }
+  .explain-box { display:none; margin-top:14px; padding:12px 14px; border-radius:16px; font-weight:700; font-size:1rem; line-height:1.45; }
+  .explain-ok { background:#dcfce7; border:2px solid #4ade80; color:#14532d; }
+  .explain-err { background:#fee2e2; border:2px solid #f87171; color:#7f1d1d; }
+  .next-btn { display:none; margin-top:12px; width:100%; background:linear-gradient(135deg, #0284c7, #2563eb); color:#fff; border:none; }
+  .input-area { display:flex; flex-direction:column; align-items:center; gap:12px; margin-top:6px; }
+  .free-input { width:180px; padding:12px; font-size:1.55rem; font-weight:800; text-align:center; border:3px solid #38bdf8; border-radius:16px; font-family:inherit; outline:none; direction:ltr; }
+  .free-input:focus { border-color:#0284c7; box-shadow:0 0 0 4px rgba(56,189,248,0.25); }
+  .clock-inputs { display:flex; align-items:center; justify-content:center; gap:8px; direction:ltr; }
+  .clock-part { width:78px; padding:12px 6px; font-size:1.55rem; font-weight:800; text-align:center; border:3px solid #38bdf8; border-radius:16px; font-family:inherit; outline:none; }
+  .clock-part:focus { border-color:#0284c7; box-shadow:0 0 0 4px rgba(56,189,248,0.25); }
+  .submit-btn { background:linear-gradient(135deg, #10b981, #059669); color:#fff; border:none; padding:12px 28px; width:100%; max-width:260px; }
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="top-bar">
+    <span class="type-pill" id="qtype"></span>
+    <span class="score" id="sc">כוכבים: ⭐ 0</span>
+  </div>
+  <h2 id="ttl"></h2>
+  <div class="q" id="q"></div>
+  <div class="opts" id="opts"></div>
+  <div class="explain-box" id="msg"></div>
+  <button type="button" class="next-btn" id="nextBtn" onclick="nextQ()">לשאלה הבאה ⬅️</button>
+</div>
+<script>
+const mode = new URLSearchParams(location.search).get('m') || 'mul';
+let score = 0, ans = '', currentExplain = '', turnCount = 0, locked = false, currentInputKind = 'choice';
+
+function rand(a, b) { return Math.floor(Math.random() * (b - a + 1)) + a; }
+function pick(arr) { return arr[rand(0, arr.length - 1)]; }
+
+function makeChoices(correctVal, distractors) {
+  const set = new Set([String(correctVal)]);
+  distractors.forEach(d => {
+    if (d !== undefined && d !== null && String(d) !== '') set.add(String(d));
+  });
+  while (set.size < 4) {
+    const n = Number(correctVal);
+    if (!isNaN(n)) {
+      const cand = Math.max(1, n + pick([-10, -5, -2, -1, 1, 2, 5, 10]));
+      set.add(String(cand));
+    } else {
+      break;
+    }
+  }
+  return Array.from(set).slice(0, 4).sort(() => Math.random() - 0.5);
+}
+
+function buildMulQuestion(isWord) {
+  document.getElementById('ttl').textContent = 'כפל וחילוק — תרגילים ובעיות';
+  if (!isWord) {
+    const type = rand(1, 3);
+    if (type === 1) {
+      const a = rand(3, 9), b = rand(4, 9);
+      ans = String(a * b);
+      currentExplain = `${a} × ${b} = ${ans}`;
+      return { rtl: false, inputKind: 'number', text: `${a} × ${b} = ?`, choices: makeChoices(ans, [a * b + a, a * b - b, a + b]) };
+    } else if (type === 2) {
+      const q = rand(3, 9), d = rand(3, 9);
+      ans = String(q);
+      currentExplain = `${q * d} : ${d} = ${q} (כי ${q} × ${d} = ${q * d})`;
+      return { rtl: false, inputKind: 'choice', text: `${q * d} : ${d} = ?`, choices: makeChoices(ans, [d, q + 1, Math.max(1, q - 1)]) };
+    } else {
+      const a = rand(2, 4), b = rand(2, 4), c = rand(2, 5);
+      ans = String(a * b * c);
+      currentExplain = `פותרים משמאל לימין: ${a} × ${b} = ${a * b}, ואז ${a * b} × ${c} = ${ans}.`;
+      return { rtl: false, inputKind: 'number', text: `${a} × ${b} × ${c} = ?`, choices: makeChoices(ans, [a + b + c, a * b + c, a * b * c + a]) };
+    }
+  } else {
+    const scenarios = [
+      () => {
+        const boxes = rand(4, 8), perBox = rand(3, 9), total = boxes * perBox;
+        ans = String(total);
+        currentExplain = `כופלים את מספר הקופסאות במספר הטושים בכל קופסה: ${boxes} × ${perBox} = ${total} טושים.`;
+        return { kind: 'number', text: `בכיתה יש ${boxes} קופסאות טושים, ובכל קופסה יש ${perBox} טושים. כמה טושים יש בסך הכל?` };
+      },
+      () => {
+        const kids = rand(4, 8), each = rand(3, 9), total = kids * each;
+        ans = String(each);
+        currentExplain = `מחלקים את סך המדבקות בין הילדים: ${total} : ${kids} = ${each} מדבקות לכל ילד.`;
+        return { kind: 'choice', text: `המורה חילקה ${total} מדבקות שווה בשווה בין ${kids} תלמידים. כמה מדבקות קיבל כל תלמיד?` };
+      },
+      () => {
+        const a = rand(2, 3), b = rand(1, 3), c = rand(1, 2), days = rand(4, 7);
+        const daily = a + b + c, total = daily * days;
+        ans = String(total);
+        currentExplain = `בכל יום: ${a} + ${b} + ${c} = ${daily} פירות. ב-${days} ימים: ${daily} × ${days} = ${total} פירות.`;
+        return { kind: 'number', text: `דניאל אוכל בכל יום ${a} תפוחים, ${b} בננות ו-${c} אגסים. כמה פירות יאכל במשך ${days} ימים?` };
+      },
+      () => {
+        const small = rand(3, 5), large = rand(7, 9), qty = rand(4, 7), total = large * qty;
+        ans = String(total);
+        currentExplain = `מחברת גדולה עולה ${large} שקלים, ולכן ${qty} מחברות גדולות עולות: ${qty} × ${large} = ${total} שקלים.`;
+        return { kind: 'choice', text: `מחברת קטנה עולה ${small} שקלים, ומחברת גדולה עולה ${large} שקלים. כמה עולות ${qty} מחברות גדולות?` };
+      }
+    ];
+    const item = pick(scenarios)();
+    return { rtl: true, inputKind: item.kind, text: item.text, choices: makeChoices(ans, [Number(ans) + 4, Math.max(2, Number(ans) - 3), Number(ans) + 7]) };
+  }
+}
+
+function buildDecQuestion(isWord) {
+  document.getElementById('ttl').textContent = 'מבנה עשרוני — תרגילים ובעיות';
+  if (!isWord) {
+    const h = rand(2, 7), t = rand(2, 7), o = rand(1, 8);
+    const num = h * 100 + t * 10 + o;
+    const type = rand(1, 3);
+    if (type === 1) {
+      const step = pick([10, 100]);
+      const isPlus = Math.random() > 0.5;
+      ans = String(isPlus ? num + step : num - step);
+      currentExplain = `${num} ${isPlus ? '+' : '-'} ${step} = ${ans}`;
+      return { rtl: false, inputKind: 'number', text: `${num} ${isPlus ? '+' : '-'} ${step} = ?`, choices: makeChoices(ans, [num + (isPlus ? 1 : -1), num + (isPlus ? step * 2 : -step * 2), num]) };
+    } else if (type === 2) {
+      const addT = rand(1, 2) * 10;
+      ans = String(addT);
+      currentExplain = `כדי להגיע מ-${num} ל-${num + addT} הוספנו ${addT} (ספרת העשרות גדלה ב-${addT / 10}).`;
+      return { rtl: false, inputKind: 'choice', text: `${num} + ? = ${num + addT}`, choices: makeChoices(ans, [addT / 10, addT * 10, addT + 10]) };
+    } else {
+      const expanded = `${h * 100} + ${t * 10} + ${o}`;
+      ans = String(num);
+      currentExplain = `${h} מאות + ${t} עשרות + ${o} יחידות = ${num}.`;
+      return { rtl: false, inputKind: 'number', text: `${expanded} = ?`, choices: makeChoices(ans, [h * 100 + o * 10 + t, t * 100 + h * 10 + o, num + 10]) };
+    }
+  } else {
+    const scenarios = [
+      () => {
+        const start = rand(3, 6) * 100 + rand(1, 5) * 10 + rand(1, 8);
+        const add = rand(2, 4) * 10;
+        ans = String(start + add);
+        currentExplain = `מוסיפים ${add} לספרת העשרות: ${start} + ${add} = ${ans} שקלים.`;
+        return { kind: 'number', text: `בקופת החיסכון של מאיה היו ${start} שקלים. סבא נתן לה עוד ${add} שקלים. כמה שקלים יש למאיה עכשיו?` };
+      },
+      () => {
+        const borrowed = rand(1, 3) * 100 + rand(1, 4) * 10 + rand(1, 4);
+        const left = rand(2, 4) * 100 + rand(1, 4) * 10 + rand(1, 4);
+        const total = borrowed + left;
+        ans = String(total);
+        currentExplain = `מחברים את הספרים שהושאלו לספרים שנשארו: ${borrowed} + ${left} = ${total} ספרים.`;
+        return { kind: 'choice', text: `לאחר שהתלמידים שאלו מהספרייה ${borrowed} ספרים, נשארו על המדפים ${left} ספרים. כמה ספרים היו בספרייה בהתחלה?` };
+      },
+      () => {
+        const h = rand(4, 8), t = rand(2, 7), o = rand(3, 9);
+        const num = h * 100 + t * 10 + o;
+        ans = String(num);
+        currentExplain = `${h} מאות = ${h * 100}, ${t} עשרות = ${t * 10}, ${o} יחידות = ${o}. יחד: ${num}.`;
+        return { kind: 'number', text: `אני מספר תלת-ספרתי: יש לי ${h} מאות, ${t} עשרות ו-${o} יחידות. איזה מספר אני?` };
+      }
+    ];
+    const item = pick(scenarios)();
+    return { rtl: true, inputKind: item.kind, text: item.text, choices: makeChoices(ans, [Number(ans) + 10, Number(ans) - 10, Number(ans) + 100]) };
+  }
+}
+
+function buildAnglesQuestion(isWord) {
+  document.getElementById('ttl').textContent = 'גיאומטריה וזוויות — זיהוי ובעיות';
+  if (!isWord) {
+    const items = [
+      { q: 'זווית שקטנה מזווית ישרה נקראת...', a: 'זווית חדה', exp: 'כל זווית שסגורה יותר מפינה של ריבוע היא זווית חדה.' },
+      { q: 'זווית שגדולה מזווית ישרה וקטנה מזווית שטוחה נקראת...', a: 'זווית קהה', exp: 'זווית פתוחה יותר מ-90 מעלות אך קטנה מקו ישר היא זווית קהה.' },
+      { q: 'זווית שמונחת על קו ישר לגמרי נקראת...', a: 'זווית שטוחה', exp: 'זווית שטוחה שווה לשתי זוויות ישרות ויוצרת קו ישר.' },
+      { q: 'איזו זווית נוצרת בפינה של דף מחברת רגיל?', a: 'זווית ישרה', exp: 'פינות של דף מחברת, מלבן וריבוע הן תמיד זוויות ישרות.' }
+    ];
+    const p = pick(items);
+    ans = p.a;
+    currentExplain = p.exp;
+    return { rtl: true, inputKind: 'choice', text: p.q, choices: ['זווית חדה', 'זווית ישרה', 'זווית קהה', 'זווית שטוחה'] };
+  } else {
+    const wordProblems = [
+      {
+        kind: 'number',
+        q: 'נועה סרטטה משולש שיש בו זווית ישרה אחת. כמה זוויות חדות יש במשולש שלה? (כתבו מספר)',
+        a: '2',
+        choices: ['1', '2', '3', '0'],
+        exp: 'בכל משולש ישר-זווית יש זווית ישרה אחת ועוד 2 זוויות חדות.'
+      },
+      {
+        kind: 'number',
+        q: 'אורי בנה ממקלות שלגון מלבן שאורכו 8 ס"מ ורוחבו 5 ס"מ. כמה זוויות ישרות יש למלבן שבנה? (כתבו מספר)',
+        a: '4',
+        choices: ['2', '3', '4', '0'],
+        exp: 'לכל מלבן (וגם לכל ריבוע) יש בדיוק 4 זוויות ישרות.'
+      },
+      {
+        kind: 'number',
+        q: 'רוני חיבר שני משולשים ישרי-זווית זהים לאורך הצלע הארוכה ויצר מלבן. כמה קודקודים יש לצורה החדשה שנוצרה? (כתבו מספר)',
+        a: '4',
+        choices: ['3', '4', '5', '6'],
+        exp: 'הצורה שנוצרה היא מלבן, ולמלבן יש 4 קודקודים ו-4 צלעות.'
+      },
+      {
+        kind: 'choice',
+        q: 'במשולש קהה-זווית יש זווית קהה אחת. מהו הסוג של שתי הזוויות האחרות במשולש?',
+        a: 'שתיהן זוויות חדות',
+        choices: ['שתיהן זוויות חדות', 'שתיהן זוויות ישרות', 'אחת ישרה ואחת קהה', 'שתיהן זוויות קהות'],
+        exp: 'במשולש קהה-זווית יש זווית קהה אחת ושתי הזוויות הנוספות הן חדות.'
+      }
+    ];
+    const p = pick(wordProblems);
+    ans = p.a;
+    currentExplain = p.exp;
+    return { rtl: true, inputKind: p.kind, text: p.q, choices: p.choices.sort(() => Math.random() - 0.5) };
+  }
+}
+
+function buildClockQuestion(isWord) {
+  document.getElementById('ttl').textContent = 'שעון ומדידות — קריאת שעון ובעיות';
+  const fmt = (h, m) => `${h}:${String(m).padStart(2, '0')}`;
+  if (!isWord) {
+    const h = rand(1, 12), m = pick([10, 15, 20, 30, 40, 45, 50]);
+    ans = fmt(h, m);
+    const desc = m === 15 ? `רבע אחרי ${h}` : (m === 30 ? `${h} וחצי` : (m === 45 ? `רבע ל-${h === 12 ? 1 : h + 1}` : `${h} ו-${m} דקות`));
+    currentExplain = `השעה "${desc}" נכתבת בשעון דיגיטלי ${ans}.`;
+    const useClockInput = (turnCount % 4 === 1);
+    return {
+      rtl: true,
+      inputKind: useClockInput ? 'clock' : 'choice',
+      text: `איך כותבים בשעון דיגיטלי את השעה: ${desc}?`,
+      choices: makeChoices(ans, [fmt(h === 12 ? 1 : h + 1, m), fmt(h, m === 30 ? 15 : 30), fmt(h === 1 ? 12 : h - 1, m)])
+    };
+  } else {
+    const scenarios = [
+      () => {
+        const startH = rand(8, 11), dur = pick([30, 45]);
+        ans = fmt(startH, dur);
+        currentExplain = `השיעור התחיל ב-${fmt(startH, 0)} ונמשך ${dur} דקות, לכן הסתיים בשעה ${ans}.`;
+        return { kind: 'clock', text: `שיעור חשבון התחיל בשעה ${fmt(startH, 0)} ונמשך ${dur} דקות. באיזו שעה הסתיים השיעור?` };
+      },
+      () => {
+        const startH = rand(14, 17);
+        ans = fmt(startH + 1, 15);
+        currentExplain = `שעה ורבע הן שעה אחת ו-15 דקות: מ-${fmt(startH, 0)} מגיעים לשעה ${ans}.`;
+        return { kind: 'choice', text: `האימון בכדורסל מתחיל בשעה ${fmt(startH, 0)} ונמשך שעה ורבע. באיזו שעה יסתיים האימון?` };
+      },
+      () => {
+        const arrH = rand(9, 12), arrM = 30;
+        ans = fmt(arrH, 10);
+        currentExplain = `20 דקות לפני ${fmt(arrH, arrM)} הן השעה ${ans} (30 פחות 20 = 10 דקות).`;
+        return { kind: 'clock', text: `הרכבת הגיעה לתחנה בשעה ${fmt(arrH, arrM)}. יובל הגיע לתחנה 20 דקות לפני שהרכבת הגיעה. באיזו שעה הגיע יובל?` };
+      }
+    ];
+    const item = pick(scenarios)();
+    const [hh, mm] = ans.split(':').map(Number);
+    return {
+      rtl: true,
+      inputKind: item.kind,
+      text: item.text,
+      choices: makeChoices(ans, [fmt(hh + 1, mm), fmt(hh, (mm + 15) % 60), fmt(Math.max(1, hh - 1), mm)])
+    };
+  }
+}
+
+function nextQ() {
+  locked = false;
+  turnCount++;
+  const isWord = (turnCount % 2 === 0); // לסירוגין: שאלה אחת תרגיל/זיהוי ושאלה הבאה בעיה מילולית
+  const typePill = document.getElementById('qtype');
+  if (isWord) {
+    typePill.textContent = '📖 בעיה מילולית';
+    typePill.className = 'type-pill pill-word';
+  } else {
+    typePill.textContent = '✏️ תרגיל / זיהוי';
+    typePill.className = 'type-pill pill-ex';
+  }
+
+  const msgEl = document.getElementById('msg');
+  const nextBtn = document.getElementById('nextBtn');
+  msgEl.style.display = 'none';
+  nextBtn.style.display = 'none';
+
+  let data;
+  if (mode === 'mul') data = buildMulQuestion(isWord);
+  else if (mode === 'dec') data = buildDecQuestion(isWord);
+  else if (mode === 'angles') data = buildAnglesQuestion(isWord);
+  else data = buildClockQuestion(isWord);
+
+  currentInputKind = data.inputKind || 'choice';
+
+  const qEl = document.getElementById('q');
+  const optsEl = document.getElementById('opts');
+  qEl.className = data.rtl ? 'q rtl' : 'q';
+  qEl.textContent = data.text;
+
+  if (currentInputKind === 'number') {
+    optsEl.className = 'input-area';
+    optsEl.innerHTML = `
+      <input type="number" inputmode="numeric" id="freeNumInp" class="free-input" placeholder="הקלידו תשובה" onkeydown="if(event.key==='Enter') submitFreeAnswer()">
+      <button type="button" id="submitFreeBtn" class="submit-btn" onclick="submitFreeAnswer()">בדיקת תשובה ✔️</button>
+    `;
+    setTimeout(() => { const el = document.getElementById('freeNumInp'); if (el) el.focus(); }, 50);
+  } else if (currentInputKind === 'clock') {
+    optsEl.className = 'input-area';
+    optsEl.innerHTML = `
+      <div class="clock-inputs">
+        <input type="number" inputmode="numeric" id="clockHInp" class="clock-part" min="0" max="23" placeholder="שעה" onkeydown="if(event.key==='Enter') document.getElementById('clockMInp').focus()">
+        <span style="font-size:1.8rem; font-weight:900; color:#0f172a;">:</span>
+        <input type="number" inputmode="numeric" id="clockMInp" class="clock-part" min="0" max="59" placeholder="דקות" onkeydown="if(event.key==='Enter') submitFreeAnswer()">
+      </div>
+      <button type="button" id="submitFreeBtn" class="submit-btn" onclick="submitFreeAnswer()">בדיקת תשובה ✔️</button>
+    `;
+    setTimeout(() => { const el = document.getElementById('clockHInp'); if (el) el.focus(); }, 50);
+  } else {
+    optsEl.className = 'opts';
+    optsEl.innerHTML = data.choices.map(c => `<button type="button" onclick="check(this, '${String(c).replace(/'/g, "\\'")}')">${c}</button>`).join('');
+  }
+}
+
+function submitFreeAnswer() {
+  if (locked) return;
+  let isRight = false;
+  if (currentInputKind === 'number') {
+    const inp = document.getElementById('freeNumInp');
+    if (!inp || inp.value.trim() === '') return;
+    const val = String(Number(inp.value.trim()));
+    isRight = (val === ans);
+    inp.disabled = true;
+    inp.style.background = isRight ? '#bbf7d0' : '#fecaca';
+    inp.style.borderColor = isRight ? '#16a34a' : '#dc2626';
+  } else if (currentInputKind === 'clock') {
+    const hInp = document.getElementById('clockHInp');
+    const mInp = document.getElementById('clockMInp');
+    if (!hInp || !mInp || hInp.value.trim() === '' || mInp.value.trim() === '') return;
+    const hVal = Number(hInp.value.trim());
+    const mVal = Number(mInp.value.trim());
+    const [expH, expM] = ans.split(':').map(Number);
+    const altExpH = expH === 12 ? 0 : (expH < 12 ? expH + 12 : expH - 12);
+    isRight = ((hVal === expH || hVal === altExpH) && mVal === expM);
+    hInp.disabled = true;
+    mInp.disabled = true;
+    hInp.style.background = isRight ? '#bbf7d0' : '#fecaca';
+    mInp.style.background = isRight ? '#bbf7d0' : '#fecaca';
+    hInp.style.borderColor = isRight ? '#16a34a' : '#dc2626';
+    mInp.style.borderColor = isRight ? '#16a34a' : '#dc2626';
+  }
+
+  locked = true;
+  const subBtn = document.getElementById('submitFreeBtn');
+  if (subBtn) subBtn.disabled = true;
+
+  const m = document.getElementById('msg');
+  m.style.display = 'block';
+  if (isRight) {
+    score++;
+    document.getElementById('sc').textContent = 'כוכבים: ⭐ ' + score;
+    m.className = 'explain-box explain-ok';
+    m.textContent = '🎉 כל הכבוד! תשובה נכונה. ' + currentExplain;
+  } else {
+    m.className = 'explain-box explain-err';
+    m.textContent = '💡 לא נורא! התשובה הנכונה היא: ' + ans + '. ' + currentExplain;
+  }
+  document.getElementById('nextBtn').style.display = 'block';
+}
+
+function check(btn, val) {
+  if (locked) return;
+  locked = true;
+  document.querySelectorAll('#opts button').forEach(b => b.disabled = true);
+
+  const m = document.getElementById('msg');
+  m.style.display = 'block';
+  if (val === ans) {
+    score++;
+    document.getElementById('sc').textContent = 'כוכבים: ⭐ ' + score;
+    btn.style.background = '#bbf7d0';
+    btn.style.borderColor = '#16a34a';
+    m.className = 'explain-box explain-ok';
+    m.textContent = '🎉 כל הכבוד! תשובה נכונה. ' + currentExplain;
+  } else {
+    btn.style.background = '#fecaca';
+    btn.style.borderColor = '#dc2626';
+    m.className = 'explain-box explain-err';
+    m.textContent = '💡 לא נורא! התשובה הנכונה היא: ' + ans + '. ' + currentExplain;
+  }
+  document.getElementById('nextBtn').style.display = 'block';
+}
+nextQ();
+<\/script>
+</body>
+</html></script>
+
+<script>
+// פונקציית עזר לחילוץ תבנית HTML נקייה ושחזור תגיות script פנימיות
+function getCleanTemplate(id) {
+    const el = document.getElementById(id);
+    if (!el) return '';
+    return el.textContent.replace(/<\\\/script>/gi, '</' + 'script>');
+}
+
+// קוד גישה למצב מורה וניהול קטגוריות ומשחקים (כיתה ג׳)
+const PORTAL_TEACHER_PIN = '3275';
+const STORAGE_KEY_G3 = 'grade3_math_portal_games_v1';
+let isPortalTeacherMode = false;
+let currentCategory = 'הכל';
+let pendingDeleteGameId = null;
+
+const CATEGORIES = [
+    { id: 'הכל', label: 'הכל', icon: '🌟' },
+    { id: 'תרגול לבוחן', label: 'תרגול לבוחן', icon: '📝' },
+    { id: 'כפל וחילוק', label: 'כפל וחילוק', icon: '✖️' },
+    { id: 'מבנה עשרוני', label: 'מבנה עשרוני', icon: '🔢' },
+    { id: 'גיאומטריה וזוויות', label: 'גיאומטריה וזוויות', icon: '📐' },
+    { id: 'שעון ומדידות', label: 'שעון ומדידות', icon: '⏰' }
+];
+
+const DEFAULT_GAMES = [
+    {
+        id: 'g3-quiz-adventure',
+        title: 'אלופי החשבון של כיתה ג׳! 🚀',
+        category: 'תרגול לבוחן',
+        icon: '🏆',
+        desc: '10 תחנות מאתגרות עם מספרים חדשים בכל משחק: לוח כפל, בעיות מילוליות, סדר פעולות, ישר המספרים, מבנה עשרוני, זוויות, מצולעים ושעון!',
+        type: 'template',
+        templateId: 'tpl-quiz-adventure-g3'
+    },
+    {
+        id: 'g3-mul-div',
+        title: 'כפל וחילוק — תרגילים ובעיות',
+        category: 'כפל וחילוק',
+        icon: '✖️',
+        desc: 'תרגול משולב של לוח הכפל, חילוק, שרשראות תרגילים ובעיות מילוליות מחיי היום-יום.',
+        type: 'mini',
+        miniMode: 'mul'
+    },
+    {
+        id: 'g3-decimal',
+        title: 'מבנה עשרוני — מאות, עשרות ויחידות',
+        category: 'מבנה עשרוני',
+        icon: '🔢',
+        desc: 'תרגול חיבור וחיסור של עשרות ומאות שלמות, השלמת מספרים חסרים ובעיות מילוליות.',
+        type: 'mini',
+        miniMode: 'dec'
+    },
+    {
+        id: 'g3-angles',
+        title: 'גיאומטריה וזוויות — זיהוי ובעיות',
+        category: 'גיאומטריה וזוויות',
+        icon: '📐',
+        desc: 'זיהוי זווית חדה, ישרה, קהה ושטוחה לצד שאלות חשיבה מילוליות על מצולעים.',
+        type: 'mini',
+        miniMode: 'angles'
+    },
+    {
+        id: 'g3-clock',
+        title: 'שעון ומדידות — קריאת שעון ובעיות',
+        category: 'שעון ומדידות',
+        icon: '⏰',
+        desc: 'קריאת שעות ודקות בשעון דיגיטלי ופתרון בעיות מילוליות על משך זמן.',
+        type: 'mini',
+        miniMode: 'clock'
+    }
+];
+
+function loadGames() {
+    try {
+        const raw = localStorage.getItem(STORAGE_KEY_G3);
+        if (raw) {
+            const parsed = JSON.parse(raw);
+            if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
+    } catch (e) {}
+    return [...DEFAULT_GAMES];
+}
+
+let gamesList = loadGames();
+
+function saveGamesList() {
+    try {
+        localStorage.setItem(STORAGE_KEY_G3, JSON.stringify(gamesList));
+    } catch (e) {}
+}
+
+function renderCategories() {
+    const nav = document.getElementById('category-filters');
+    if (!nav) return;
+    nav.innerHTML = CATEGORIES.map(cat => {
+        const isQuiz = cat.id === 'תרגול לבוחן';
+        const isActive = currentCategory === cat.id;
+        return `<button type="button" class="filter-chip ${isQuiz ? 'quiz-chip' : ''} ${isActive ? 'active' : ''}" onclick="setCategory('${cat.id}')">${cat.icon} ${cat.label}</button>`;
+    }).join('');
+}
+
+function setCategory(catId) {
+    currentCategory = catId;
+    renderCategories();
+    renderGamesGrid();
+}
+
+function renderGamesGrid() {
+    const grid = document.getElementById('games-grid');
+    if (!grid) return;
+    const filtered = currentCategory === 'הכל'
+        ? gamesList
+        : gamesList.filter(g => g.category === currentCategory);
+
+    grid.innerHTML = filtered.map(game => {
+        const isQuiz = game.category === 'תרגול לבוחן';
+        const delBtn = isPortalTeacherMode
+            ? `<button type="button" class="btn btn-danger" style="width:100%; margin-top:6px;" onclick="askDeleteGame('${game.id}')">🗑️ הסר משחק</button>`
+            : '';
+        return `
+            <article class="game-card ${isQuiz ? 'featured-quiz' : ''}">
+                <div>
+                    <div class="card-top">
+                        <div class="card-icon">${game.icon || '🎯'}</div>
+                        <span class="cat-badge">${game.category}</span>
+                    </div>
+                    <h2 class="card-title" style="margin-top:14px;">${game.title}</h2>
+                    <p class="card-desc" style="margin-top:8px;">${game.desc}</p>
+                </div>
+                <div>
+                    <button type="button" class="btn ${isQuiz ? 'btn-quiz' : 'btn-primary'}" onclick="launchGame('${game.id}')">
+                        ${isQuiz ? '🚀 התחילו תרגול לבוחן!' : '🎮 שחקו עכשיו!'}
+                    </button>
+                    ${delBtn}
+                </div>
+            </article>
+        `;
+    }).join('');
+}
+
+function launchGame(gameId) {
+    const game = gamesList.find(g => g.id === gameId);
+    if (!game) return;
+
+    const overlay = document.getElementById('player-overlay');
+    const frame = document.getElementById('player-frame');
+    document.getElementById('player-icon').textContent = game.icon || '🎮';
+    document.getElementById('player-title').textContent = game.title;
+
+    if (game.type === 'template') {
+        frame.removeAttribute('src');
+        frame.srcdoc = getCleanTemplate(game.templateId);
+    } else if (game.type === 'mini') {
+        const baseHtml = getCleanTemplate('tpl-mini-games-g3');
+        const injectedHtml = baseHtml.replace(
+            "const mode = new URLSearchParams(location.search).get('m') || 'mul';",
+            `const mode = '${game.miniMode || 'mul'}';`
+        );
+        frame.removeAttribute('src');
+        frame.srcdoc = injectedHtml;
+    } else if (game.type === 'html') {
+        frame.removeAttribute('src');
+        frame.srcdoc = game.htmlCode || '';
+    } else if (game.type === 'url') {
+        frame.removeAttribute('srcdoc');
+        frame.src = game.url || '';
+    }
+
+    overlay.classList.remove('hidden');
+}
+
+function closePlayer() {
+    const overlay = document.getElementById('player-overlay');
+    const frame = document.getElementById('player-frame');
+    overlay.classList.add('hidden');
+    frame.srcdoc = '';
+    frame.removeAttribute('src');
+}
+
+// ניהול מצב מורה
+function handleTeacherButtonClick() {
+    if (isPortalTeacherMode) {
+        isPortalTeacherMode = false;
+        document.getElementById('teacher-panel').classList.add('hidden');
+        document.getElementById('btn-teacher-mode').textContent = '👩‍🏫 מצב מורה';
+        renderGamesGrid();
+        return;
+    }
+    const modal = document.getElementById('modal-teacher-pin');
+    const inp = document.getElementById('portal-teacher-pin');
+    document.getElementById('portal-pin-error').classList.add('hidden');
+    inp.value = '';
+    modal.classList.remove('hidden');
+    inp.focus();
+}
+
+function closeTeacherPinModal() {
+    document.getElementById('modal-teacher-pin').classList.add('hidden');
+}
+
+function verifyPortalTeacherPin() {
+    const inp = document.getElementById('portal-teacher-pin');
+    if (inp.value.trim() === PORTAL_TEACHER_PIN) {
+        isPortalTeacherMode = true;
+        closeTeacherPinModal();
+        document.getElementById('teacher-panel').classList.remove('hidden');
+        document.getElementById('btn-teacher-mode').textContent = '🔓 יציאה ממצב מורה';
+        renderGamesGrid();
+    } else {
+        document.getElementById('portal-pin-error').classList.remove('hidden');
+    }
+}
+
+function openAddGameModal() {
+    document.getElementById('new-title').value = '';
+    document.getElementById('new-desc').value = '';
+    document.getElementById('new-html').value = '';
+    document.getElementById('new-url').value = '';
+    document.getElementById('add-game-error').classList.add('hidden');
+    document.getElementById('modal-add-game').classList.remove('hidden');
+}
+
+function closeAddGameModal() {
+    document.getElementById('modal-add-game').classList.add('hidden');
+}
+
+function toggleNewSourceType() {
+    const type = document.getElementById('new-type').value;
+    document.getElementById('group-html').classList.toggle('hidden', type !== 'html');
+    document.getElementById('group-url').classList.toggle('hidden', type !== 'url');
+}
+
+function saveNewGame() {
+    const title = document.getElementById('new-title').value.trim();
+    const category = document.getElementById('new-category').value;
+    const icon = document.getElementById('new-icon').value.trim() || '🎯';
+    const desc = document.getElementById('new-desc').value.trim() || 'משחק תרגול בחשבון לכיתה ג׳.';
+    const type = document.getElementById('new-type').value;
+    const htmlCode = document.getElementById('new-html').value.trim();
+    const url = document.getElementById('new-url').value.trim();
+
+    if (!title || (type === 'html' && !htmlCode) || (type === 'url' && !url)) {
+        document.getElementById('add-game-error').classList.remove('hidden');
+        return;
+    }
+
+    gamesList.push({
+        id: 'custom-' + Date.now(),
+        title,
+        category,
+        icon,
+        desc,
+        type,
+        htmlCode,
+        url
+    });
+    saveGamesList();
+    closeAddGameModal();
+    renderGamesGrid();
+}
+
+function askDeleteGame(gameId) {
+    pendingDeleteGameId = gameId;
+    document.getElementById('modal-confirm-delete').classList.remove('hidden');
+}
+
+function closeConfirmDeleteModal() {
+    pendingDeleteGameId = null;
+    document.getElementById('modal-confirm-delete').classList.add('hidden');
+}
+
+function confirmDeleteGame() {
+    if (pendingDeleteGameId) {
+        gamesList = gamesList.filter(g => g.id !== pendingDeleteGameId);
+        saveGamesList();
+        renderGamesGrid();
+    }
+    closeConfirmDeleteModal();
+}
+
+function exportPortalHtml() {
+    const clone = document.documentElement.cloneNode(true);
+    const tp = clone.querySelector('#teacher-panel');
+    if (tp) tp.classList.add('hidden');
+    const btm = clone.querySelector('#btn-teacher-mode');
+    if (btm) btm.textContent = '👩‍🏫 מצב מורה';
+
+    const serializedGames = JSON.stringify(gamesList).replace(/<\/script>/gi, '<\\/script>');
+    const scriptTag = clone.querySelector('body > script:last-of-type');
+    if (scriptTag) {
+        scriptTag.textContent = scriptTag.textContent.replace(
+            /const DEFAULT_GAMES = \[[\s\S]*?\];/,
+            `const DEFAULT_GAMES = ${serializedGames};`
+        );
+    }
+
+    const fullHtml = '<!DOCTYPE html>\n' + clone.outerHTML;
+    const blob = new Blob([fullHtml], { type: 'text/html;charset=utf-8' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'עולם_החשבון_כיתה_ג.html';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(link.href);
+}
+
+// אתחול האתר בעת הטעינה
+renderCategories();
+renderGamesGrid();
+</script>
+</body>
+</html>
